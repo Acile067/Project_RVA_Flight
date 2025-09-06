@@ -7,8 +7,8 @@
       <Entity type="Class">
         <Name>Flight</Name>
         <Access>Public</Access>
-        <Location left="744" top="117" />
-        <Size width="162" height="216" />
+        <Location left="766" top="647" />
+        <Size width="162" height="247" />
         <Collapsed>False</Collapsed>
         <Member type="Field">string flightNumber</Member>
         <Member type="Field">FlightType type</Member>
@@ -16,18 +16,21 @@
         <Member type="Field">DateTime departureTime</Member>
         <Member type="Field">string pilotMessage</Member>
         <Member type="Field">int delayMinutes</Member>
+        <Member type="Field">private FlightState state</Member>
         <Member type="Method">public void FlightSpecs()</Member>
+        <Member type="Method">public void SetState(FlightState state)</Member>
+        <Member type="Method">public void NotifyObservers()</Member>
         <Modifier>None</Modifier>
       </Entity>
       <Entity type="Comment">
         <Text>FlightNumber: tri slova + tri broja</Text>
-        <Location left="744" top="20" />
+        <Location left="132" top="376" />
         <Size width="160" height="75" />
       </Entity>
       <Entity type="Class">
         <Name>Airplane</Name>
         <Access>Public</Access>
-        <Location left="1094" top="117" />
+        <Location left="1116" top="647" />
         <Size width="162" height="216" />
         <Collapsed>False</Collapsed>
         <Member type="Field">string code</Member>
@@ -40,7 +43,7 @@
       <Entity type="Class">
         <Name>CharterFlight</Name>
         <Access>Public</Access>
-        <Location left="365" top="414" />
+        <Location left="313" top="933" />
         <Size width="162" height="216" />
         <Collapsed>False</Collapsed>
         <Member type="Field">DateTime arrivalTime</Member>
@@ -50,7 +53,7 @@
       <Entity type="Class">
         <Name>City</Name>
         <Access>Public</Access>
-        <Location left="744" top="434" />
+        <Location left="766" top="964" />
         <Size width="162" height="216" />
         <Collapsed>False</Collapsed>
         <Member type="Field">string name</Member>
@@ -60,7 +63,7 @@
       <Entity type="Class">
         <Name>BaseFlight</Name>
         <Access>Public</Access>
-        <Location left="125" top="414" />
+        <Location left="73" top="933" />
         <Size width="162" height="216" />
         <Collapsed>False</Collapsed>
         <Member type="Field">protected string flightNumber</Member>
@@ -80,13 +83,157 @@ LiveCharts2 grafikon: Radial area
 Na prikazu Letova (Flights) treba dodati dugme koje će dodati i prikaz CharterFlights u istom DataGridu
 
 </Text>
-        <Location left="125" top="90" />
+        <Location left="147" top="620" />
         <Size width="311" height="193" />
       </Entity>
       <Entity type="Comment">
         <Text>Code: dva slova + slova ili brojevi( maksimalno 5)</Text>
-        <Location left="1094" top="20" />
+        <Location left="132" top="464" />
         <Size width="160" height="75" />
+      </Entity>
+      <Entity type="Interface">
+        <Name>IDataStorage</Name>
+        <Access>Public</Access>
+        <Location left="1577" top="376" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">void Save&lt;T&gt;(string filePath, T data)</Member>
+        <Member type="Method">T Load&lt;T&gt;(string filePath)</Member>
+      </Entity>
+      <Entity type="Class">
+        <Name>XmlDataStorage</Name>
+        <Access>Public</Access>
+        <Location left="1384" top="652" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>JsonDataStorage</Name>
+        <Access>Public</Access>
+        <Location left="1577" top="652" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>CsvDataStorage</Name>
+        <Access>Public</Access>
+        <Location left="1767" top="652" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Enum">
+        <Name>FlightType</Name>
+        <Access>Public</Access>
+        <Location left="302" top="376" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Value>PRIVATE</Value>
+        <Value>PUBLIC</Value>
+      </Entity>
+      <Entity type="Class">
+        <Name>CharterFlightAdapter</Name>
+        <Access>Public</Access>
+        <Location left="556" top="933" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">CharterFlight _charterFlight</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>FlightState</Name>
+        <Access>Public</Access>
+        <Location left="539" top="376" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">public abstract void Handle()</Member>
+        <Modifier>Abstract</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>OnTimeState</Name>
+        <Access>Public</Access>
+        <Location left="539" top="82" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>DelayedState</Name>
+        <Access>Public</Access>
+        <Location left="365" top="82" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>CancelledState</Name>
+        <Access>Public</Access>
+        <Location left="715" top="82" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>FlightCommand</Name>
+        <Access>Public</Access>
+        <Location left="1116" top="964" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">protected Flight _flight</Member>
+        <Modifier>Abstract</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>Invoker</Name>
+        <Access>Public</Access>
+        <Location left="1364" top="964" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">private Stack&lt;FlightCommand&gt; undoStack</Member>
+        <Member type="Field">private Stack&lt;FlighttCommand&gt; redoStack</Member>
+        <Member type="Method">public void ExecuteCommand(FlightCommand command)</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>AddCommand</Name>
+        <Access>Public</Access>
+        <Location left="930" top="1279" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>DeleteCommand</Name>
+        <Access>Public</Access>
+        <Location left="1116" top="1278" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>UpdateCommand</Name>
+        <Access>Public</Access>
+        <Location left="1300" top="1279" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IObserver</Name>
+        <Access>Public</Access>
+        <Location left="768" top="381" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">void Update(Flight flight)</Member>
+      </Entity>
+      <Entity type="Class">
+        <Name>ClientView</Name>
+        <Access>Public</Access>
+        <Location left="1018" top="376" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
       </Entity>
     </Entities>
     <Relationships>
@@ -104,8 +251,8 @@ Na prikazu Letova (Flights) treba dodati dugme koje će dodati i prikaz CharterF
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>772</X>
-          <Y>364</Y>
+          <X>794</X>
+          <Y>925</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
@@ -117,8 +264,8 @@ Na prikazu Letova (Flights) treba dodati dugme koje će dodati i prikaz CharterF
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>875</X>
-          <Y>366</Y>
+          <X>860</X>
+          <Y>927</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
@@ -128,6 +275,106 @@ Na prikazu Letova (Flights) treba dodati dugme koje će dodati i prikaz CharterF
       <Relationship type="Generalization" first="3" second="5">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Realization" first="9" second="8">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Realization" first="10" second="8">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Realization" first="11" second="8">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Association" first="13" second="3">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+        <EndRole>adaptee</EndRole>
+      </Relationship>
+      <Relationship type="Generalization" first="13" second="0">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>741</X>
+          <Y>828</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Association" first="14" second="0">
+        <Label>state</Label>
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>621</X>
+          <Y>617</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>698</X>
+          <Y>754</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Aggregation</AssociationType>
+        <StartMultiplicity>0..*</StartMultiplicity>
+        <EndMultiplicity>1</EndMultiplicity>
+      </Relationship>
+      <Relationship type="Generalization" first="16" second="14">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Generalization" first="15" second="14">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Generalization" first="17" second="14">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Association" first="18" second="0">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>910</X>
+          <Y>937</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+        <StartMultiplicity>0..*</StartMultiplicity>
+        <EndMultiplicity>1</EndMultiplicity>
+      </Relationship>
+      <Relationship type="Association" first="19" second="18">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Aggregation</AssociationType>
+        <StartMultiplicity>0..*</StartMultiplicity>
+        <EndMultiplicity>0..*</EndMultiplicity>
+      </Relationship>
+      <Relationship type="Generalization" first="20" second="18">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Generalization" first="21" second="18">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Generalization" first="22" second="18">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Realization" first="24" second="23">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Association" first="0" second="23">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
+        <StartMultiplicity>1</StartMultiplicity>
+        <EndMultiplicity>0..*</EndMultiplicity>
       </Relationship>
     </Relationships>
   </ProjectItem>
