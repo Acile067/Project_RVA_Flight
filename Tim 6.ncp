@@ -1,0 +1,134 @@
+<Project>
+  <Name>Tim 6</Name>
+  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.4.1823.0, Culture=neutral, PublicKeyToken=null">
+    <Name>Flight</Name>
+    <Language>CSharp</Language>
+    <Entities>
+      <Entity type="Class">
+        <Name>Flight</Name>
+        <Access>Public</Access>
+        <Location left="744" top="117" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">string flightNumber</Member>
+        <Member type="Field">FlightType type</Member>
+        <Member type="Field">DateTime arrivalTime</Member>
+        <Member type="Field">DateTime departureTime</Member>
+        <Member type="Field">string pilotMessage</Member>
+        <Member type="Field">int delayMinutes</Member>
+        <Member type="Method">public void FlightSpecs()</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Comment">
+        <Text>FlightNumber: tri slova + tri broja</Text>
+        <Location left="744" top="20" />
+        <Size width="160" height="75" />
+      </Entity>
+      <Entity type="Class">
+        <Name>Airplane</Name>
+        <Access>Public</Access>
+        <Location left="1094" top="117" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">string code</Member>
+        <Member type="Field">string name</Member>
+        <Member type="Field">int capacity</Member>
+        <Member type="Field">int yearOfManufacture</Member>
+        <Member type="Method">public void AirplaneSpecs()</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>CharterFlight</Name>
+        <Access>Public</Access>
+        <Location left="365" top="414" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">DateTime arrivalTime</Member>
+        <Member type="Field">TimeSpan duration</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>City</Name>
+        <Access>Public</Access>
+        <Location left="744" top="434" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">string name</Member>
+        <Member type="Field">string country</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>BaseFlight</Name>
+        <Access>Public</Access>
+        <Location left="125" top="414" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">protected string flightNumber</Member>
+        <Member type="Field">protected FlightType type</Member>
+        <Modifier>Abstract</Modifier>
+      </Entity>
+      <Entity type="Comment">
+        <Text>Napomene:
+
+Primarna klasa: Flight
+Pomoćne klase: Airplane, City 
+Izdvojena klasa: CharterFlight
+Stanja primarne klase: OnTime, Cancelled, Delayed (zavisno od stanja ispisivati drugačije poruke pilota kao i kašnjenje)
+
+LiveCharts2 grafikon: Radial area
+
+Na prikazu Letova (Flights) treba dodati dugme koje će dodati i prikaz CharterFlights u istom DataGridu
+
+</Text>
+        <Location left="125" top="90" />
+        <Size width="311" height="193" />
+      </Entity>
+      <Entity type="Comment">
+        <Text>Code: dva slova + slova ili brojevi( maksimalno 5)</Text>
+        <Location left="1094" top="20" />
+        <Size width="160" height="75" />
+      </Entity>
+    </Entities>
+    <Relationships>
+      <Relationship type="Association" first="0" second="2">
+        <Label>operates</Label>
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+        <StartMultiplicity>0..*</StartMultiplicity>
+        <EndMultiplicity>1</EndMultiplicity>
+      </Relationship>
+      <Relationship type="Association" first="0" second="4">
+        <Label>departure</Label>
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>772</X>
+          <Y>364</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+        <StartMultiplicity>0..*</StartMultiplicity>
+        <EndMultiplicity>1</EndMultiplicity>
+      </Relationship>
+      <Relationship type="Association" first="0" second="4">
+        <Label>arrival</Label>
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>875</X>
+          <Y>366</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+        <StartMultiplicity>0..*</StartMultiplicity>
+        <EndMultiplicity>1</EndMultiplicity>
+      </Relationship>
+      <Relationship type="Generalization" first="3" second="5">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+    </Relationships>
+  </ProjectItem>
+</Project>
