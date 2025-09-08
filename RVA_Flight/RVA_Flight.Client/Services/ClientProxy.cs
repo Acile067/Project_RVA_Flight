@@ -14,8 +14,8 @@ namespace RVA_Flight.Client.Services
         private static readonly object _lock = new object();
 
         private IFlightService _flightService;
+        private IStorageService _storageService;
 
-        // Singleton instanca
         public static ClientProxy Instance
         {
             get
@@ -34,11 +34,20 @@ namespace RVA_Flight.Client.Services
 
         private ClientProxy()
         {
-            var factory = new ChannelFactory<IFlightService>(new BasicHttpBinding(),
+            // FlightService endpoint
+            var flightFactory = new ChannelFactory<IFlightService>(
+                new BasicHttpBinding(),
                 new EndpointAddress("http://localhost:5000/FlightService"));
-            _flightService = factory.CreateChannel();
+            _flightService = flightFactory.CreateChannel();
+
+            // StorageService endpoint
+            var storageFactory = new ChannelFactory<IStorageService>(
+                new BasicHttpBinding(),
+                new EndpointAddress("http://localhost:5001/StorageService"));
+            _storageService = storageFactory.CreateChannel();
         }
 
         public IFlightService FlightService => _flightService;
+        public IStorageService StorageService => _storageService;
     }
 }

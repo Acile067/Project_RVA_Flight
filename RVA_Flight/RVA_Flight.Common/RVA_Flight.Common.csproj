@@ -44,7 +44,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Contracts\IFlightService.cs" />
+    <Compile Include="Contracts\IStorageService.cs" />
     <Compile Include="Entities\FlightDto.cs" />
+    <Compile Include="Enums\StorageType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -1,4 +1,5 @@
-﻿using RVA_Flight.Server.Contracts;
+﻿using RVA_Flight.Common.Enums;
+using RVA_Flight.Server.Contracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,13 +8,6 @@ using System.Threading.Tasks;
 
 namespace RVA_Flight.Server.DataStorage
 {
-    public enum StorageType
-    {
-        Csv,
-        Json,
-        Xml
-    }
-
     public class DataStorageFactory
     {
         public static IDataStorage Create(StorageType type)

@@ -1,4 +1,4 @@
-﻿using RVA_Flight.Common.Entities;
+﻿using RVA_Flight.Common.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,12 +9,14 @@ using System.Threading.Tasks;
 namespace RVA_Flight.Common.Contracts
 {
     [ServiceContract]
-    public interface IFlightService
+    public interface IStorageService
     {
         [OperationContract]
-        void SaveFlight(FlightDto flight);
+        string SelectStorage(string storageType);
 
         [OperationContract]
-        FlightDto LoadFlight();
+        StorageType GetSelectedStorage();
+        [OperationContract]
+        string GetFlightFilePath();
     }
 }

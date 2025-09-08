@@ -43,7 +43,7 @@ namespace RVA_Flight.Client.ViewModels
         {
             if (string.IsNullOrEmpty(SelectedStorage)) return;
 
-            ClientProxy.Instance.FlightService.SelectStorage(SelectedStorage);
+            ClientProxy.Instance.StorageService.SelectStorage(SelectedStorage);
 
             _mainWindow.CurrentViewModel = new FlightViewModel();
         }
