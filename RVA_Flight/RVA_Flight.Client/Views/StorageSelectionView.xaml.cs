@@ -1,5 +1,4 @@
-﻿using RVA_Flight.Client.ViewModels;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,17 +13,16 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace RVA_Flight.Client
+namespace RVA_Flight.Client.Views
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for StorageSelectionView.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class StorageSelectionView : UserControl
     {
-        public MainWindow()
+        public StorageSelectionView()
         {
             InitializeComponent();
-            DataContext = new MainWindowViewModel();
         }
     }
 }

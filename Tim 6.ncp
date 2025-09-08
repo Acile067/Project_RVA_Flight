@@ -83,7 +83,7 @@ LiveCharts2 grafikon: Radial area
 Na prikazu Letova (Flights) treba dodati dugme koje će dodati i prikaz CharterFlights u istom DataGridu
 
 </Text>
-        <Location left="147" top="620" />
+        <Location left="73" top="623" />
         <Size width="311" height="193" />
       </Entity>
       <Entity type="Comment">
@@ -94,7 +94,7 @@ Na prikazu Letova (Flights) treba dodati dugme koje će dodati i prikaz CharterF
       <Entity type="Interface">
         <Name>IDataStorage</Name>
         <Access>Public</Access>
-        <Location left="1577" top="376" />
+        <Location left="1837" top="358" />
         <Size width="162" height="216" />
         <Collapsed>False</Collapsed>
         <Member type="Method">void Save&lt;T&gt;(string filePath, T data)</Member>
@@ -103,7 +103,7 @@ Na prikazu Letova (Flights) treba dodati dugme koje će dodati i prikaz CharterF
       <Entity type="Class">
         <Name>XmlDataStorage</Name>
         <Access>Public</Access>
-        <Location left="1384" top="652" />
+        <Location left="1644" top="634" />
         <Size width="162" height="216" />
         <Collapsed>False</Collapsed>
         <Modifier>None</Modifier>
@@ -111,7 +111,7 @@ Na prikazu Letova (Flights) treba dodati dugme koje će dodati i prikaz CharterF
       <Entity type="Class">
         <Name>JsonDataStorage</Name>
         <Access>Public</Access>
-        <Location left="1577" top="652" />
+        <Location left="1837" top="634" />
         <Size width="162" height="216" />
         <Collapsed>False</Collapsed>
         <Modifier>None</Modifier>
@@ -119,7 +119,7 @@ Na prikazu Letova (Flights) treba dodati dugme koje će dodati i prikaz CharterF
       <Entity type="Class">
         <Name>CsvDataStorage</Name>
         <Access>Public</Access>
-        <Location left="1767" top="652" />
+        <Location left="2027" top="634" />
         <Size width="162" height="216" />
         <Collapsed>False</Collapsed>
         <Modifier>None</Modifier>
@@ -127,7 +127,7 @@ Na prikazu Letova (Flights) treba dodati dugme koje će dodati i prikaz CharterF
       <Entity type="Enum">
         <Name>FlightType</Name>
         <Access>Public</Access>
-        <Location left="302" top="376" />
+        <Location left="420" top="647" />
         <Size width="162" height="216" />
         <Collapsed>False</Collapsed>
         <Value>PRIVATE</Value>
@@ -235,6 +235,25 @@ Na prikazu Letova (Flights) treba dodati dugme koje će dodati i prikaz CharterF
         <Collapsed>False</Collapsed>
         <Modifier>None</Modifier>
       </Entity>
+      <Entity type="Class">
+        <Name>DataStorageFactory</Name>
+        <Access>Public</Access>
+        <Location left="1410" top="381" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">public IDataStorage Create(StorageType type)</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Enum">
+        <Name>StorageType</Name>
+        <Access>Public</Access>
+        <Location left="1410" top="634" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Value>Csv</Value>
+        <Value>Json</Value>
+        <Value>Xml</Value>
+      </Entity>
     </Entities>
     <Relationships>
       <Relationship type="Association" first="0" second="2">
@@ -289,6 +308,8 @@ Na prikazu Letova (Flights) treba dodati dugme koje će dodati i prikaz CharterF
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="13" second="3">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -333,6 +354,8 @@ Na prikazu Letova (Flights) treba dodati dugme koje će dodati i prikaz CharterF
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="18" second="0">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="False">
@@ -345,6 +368,8 @@ Na prikazu Letova (Flights) treba dodati dugme koje će dodati i prikaz CharterF
         <EndMultiplicity>1</EndMultiplicity>
       </Relationship>
       <Relationship type="Association" first="19" second="18">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -369,12 +394,46 @@ Na prikazu Letova (Flights) treba dodati dugme koje će dodati i prikaz CharterF
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="0" second="23">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
         <StartMultiplicity>1</StartMultiplicity>
         <EndMultiplicity>0..*</EndMultiplicity>
+      </Relationship>
+      <Relationship type="Dependency" first="25" second="26">
+        <Label>
+        </Label>
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>1491</X>
+          <Y>609</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Dependency" first="5" second="12">
+        <Label>
+        </Label>
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Dependency" first="0" second="12">
+        <Label>
+        </Label>
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>607</X>
+          <Y>728</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Dependency" first="25" second="8">
+        <Label>
+        </Label>
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
     </Relationships>
   </ProjectItem>

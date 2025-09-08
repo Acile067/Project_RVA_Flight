@@ -4,9 +4,21 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RVA_Flight.Client"
+        xmlns:viewmodels="clr-namespace:RVA_Flight.Client.ViewModels"
+        xmlns:views="clr-namespace:RVA_Flight.Client.Views"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+    <Window.Resources>
+        <!-- Storage selection ekran -->
+        <DataTemplate DataType="{x:Type viewmodels:StorageSelectionViewModel}">
+            <views:StorageSelectionView />
+        </DataTemplate>
+
+        <!-- Nakon izbora storage-a -->
+        <DataTemplate DataType="{x:Type viewmodels:FlightViewModel}">
+            <views:FlightView />
+        </DataTemplate>
+    </Window.Resources>
+
+    <ContentControl Content="{Binding CurrentViewModel}" />
 </Window>
