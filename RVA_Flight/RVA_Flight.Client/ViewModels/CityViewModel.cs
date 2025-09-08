@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace RVA_Flight.Client.ViewModels
 {
-    public class FlightViewModel : BaseViewModel
+    public class CityViewModel : BaseViewModel
     {
-        public string Title => "Ovo je Flight View!";
+        public string Title => "Ovo je City View!";
     }
 }

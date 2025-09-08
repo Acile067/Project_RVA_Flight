@@ -9,6 +9,8 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+        
         <!-- Storage selection ekran -->
         <DataTemplate DataType="{x:Type viewmodels:StorageSelectionViewModel}">
             <views:StorageSelectionView />
@@ -18,7 +20,34 @@
         <DataTemplate DataType="{x:Type viewmodels:FlightViewModel}">
             <views:FlightView />
         </DataTemplate>
+
+        <!-- City View -->
+        <DataTemplate DataType="{x:Type viewmodels:CityViewModel}">
+            <views:CityView />
+        </DataTemplate>
+
+        <!-- Airplane View -->
+        <DataTemplate DataType="{x:Type viewmodels:AirplaneViewModel}">
+            <views:AirplaneView />
+        </DataTemplate>
     </Window.Resources>
 
-    <ContentControl Content="{Binding CurrentViewModel}" />
+    <DockPanel>
+        <!-- Navigacija -->
+        <StackPanel DockPanel.Dock="Left" Width="150" Background="#f0f0f0"
+                Visibility="{Binding ShowNavigation, Converter={StaticResource BoolToVis}}">
+            <Button Content="Flights"
+                Command="{Binding NavigateCommand}"
+                CommandParameter="Flight" Margin="5"/>
+            <Button Content="Cities"
+                Command="{Binding NavigateCommand}"
+                CommandParameter="City" Margin="5"/>
+            <Button Content="Airplanes"
+                Command="{Binding NavigateCommand}"
+                CommandParameter="Airplane" Margin="5"/>
+        </StackPanel>
+
+        <!-- Glavni prikaz -->
+        <ContentControl Content="{Binding CurrentViewModel}" />
+    </DockPanel>
 </Window>

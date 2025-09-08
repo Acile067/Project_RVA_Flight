@@ -15,7 +15,8 @@ namespace RVA_Flight.Server.Service
     public class FlightService : IFlightService
     {
         private IDataStorage _storage;
-        private string _filePath = "data.json";
+        private string _flightFilePath;
+        private string _cityFilePath;
 
         public FlightService()
         {
@@ -30,13 +31,16 @@ namespace RVA_Flight.Server.Service
             switch (type)
             {
                 case StorageType.Csv:
-                    _filePath = "data.csv";
+                    _flightFilePath = "flight.csv";
+                    _cityFilePath = "city.csv";
                     break;
                 case StorageType.Json:
-                    _filePath = "data.json";
+                    _flightFilePath = "flight.json";
+                    _cityFilePath = "city.json";
                     break;
                 case StorageType.Xml:
-                    _filePath = "data.xml";
+                    _flightFilePath = "flight.xml";
+                    _cityFilePath = "city.xml";
                     break;
                 default:
                     return $"Unsupported storage type: {storageType}";
@@ -48,12 +52,12 @@ namespace RVA_Flight.Server.Service
 
         public void SaveFlight(FlightDto flight)
         {
-            _storage.Save(_filePath, flight);
+            _storage.Save(_flightFilePath, flight);
         }
 
         public FlightDto LoadFlight()
         {
-            return _storage.Load<FlightDto>(_filePath);
+            return _storage.Load<FlightDto>(_flightFilePath);
         }
     }
 }

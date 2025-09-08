@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace RVA_Flight.Client.ViewModels
 {
@@ -16,13 +17,33 @@ namespace RVA_Flight.Client.ViewModels
             {
                 _currentViewModel = value;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(ShowNavigation));
             }
         }
 
+        public ICommand NavigateCommand { get; }
+        public bool ShowNavigation => !(CurrentViewModel is StorageSelectionViewModel);
         public MainWindowViewModel()
         {
-            // na početku se prikazuje storage selection
             CurrentViewModel = new StorageSelectionViewModel(this);
+
+            NavigateCommand = new RelayCommand(Navigate);
+        }
+
+        private void Navigate(object destination)
+        {
+            switch (destination?.ToString())
+            {
+                case "Flight":
+                    CurrentViewModel = new FlightViewModel();
+                    break;
+                case "City":
+                    CurrentViewModel = new CityViewModel();
+                    break;
+                case "Airplane":
+                    CurrentViewModel = new AirplaneViewModel();
+                    break;
+            }
         }
     }
 }

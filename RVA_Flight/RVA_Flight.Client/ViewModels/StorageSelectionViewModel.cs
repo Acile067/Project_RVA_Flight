@@ -1,4 +1,5 @@
-﻿using RVA_Flight.Common.Contracts;
+﻿using RVA_Flight.Client.Services;
+using RVA_Flight.Common.Contracts;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -12,19 +13,14 @@ namespace RVA_Flight.Client.ViewModels
 {
     public class StorageSelectionViewModel : BaseViewModel
     {
-        private IFlightService _flightService;
         private readonly MainWindowViewModel _mainWindow;
 
         public StorageSelectionViewModel(MainWindowViewModel mainWindow)
         {
             _mainWindow = mainWindow;
 
-            ChannelFactory<IFlightService> factory =
-                new ChannelFactory<IFlightService>(new BasicHttpBinding(),
-                new EndpointAddress("http://localhost:5000/FlightService"));
-            _flightService = factory.CreateChannel();
-
             StorageOptions = new ObservableCollection<string> { "Csv", "Json", "Xml" };
+
             SelectStorageCommand = new RelayCommand(SelectStorage);
         }
 
@@ -47,7 +43,7 @@ namespace RVA_Flight.Client.ViewModels
         {
             if (string.IsNullOrEmpty(SelectedStorage)) return;
 
-            _flightService.SelectStorage(SelectedStorage);
+            ClientProxy.Instance.FlightService.SelectStorage(SelectedStorage);
 
             _mainWindow.CurrentViewModel = new FlightViewModel();
         }
