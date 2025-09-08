@@ -1,5 +1,5 @@
-﻿using RVA_Flight.Common.Enums;
-using RVA_Flight.Server.Contracts;
+﻿using RVA_Flight.Common.Contracts;
+using RVA_Flight.Common.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -46,6 +46,9 @@ namespace RVA_Flight.Client.ViewModels
             ClientProxy.Instance.StorageService.SelectStorage(SelectedStorage);
 
             _mainWindow.CurrentViewModel = new FlightViewModel();
+
+            // ovo je samo test da vidim jel radi - brise se posle
+            //ClientProxy.Instance.FlightService.SaveFlight(new Common.Entities.FlightDto() { Id = 4, Destination = "negde"});
         }
     }
 }

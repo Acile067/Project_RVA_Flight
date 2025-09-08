@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json;
-using RVA_Flight.Server.Contracts;
+using RVA_Flight.Common.Contracts;
 using System;
 using System.Collections.Generic;
 using System.IO;

@@ -1,7 +1,6 @@
 ﻿using RVA_Flight.Common.Contracts;
 using RVA_Flight.Common.Entities;
 using RVA_Flight.Common.Enums;
-using RVA_Flight.Server.Contracts;
 using RVA_Flight.Server.DataStorage;
 using System;
 using System.Collections.Generic;
@@ -24,13 +23,13 @@ namespace RVA_Flight.Server.Service
 
         public void SaveFlight(FlightDto flight)
         {
-            var storage = DataStorageFactory.Create(_storageService.GetSelectedStorage());
+            var storage = _storageService.GetStorage();
             storage.Save(_storageService.GetFlightFilePath(), flight);
         }
 
         public FlightDto LoadFlight()
         {
-            var storage = DataStorageFactory.Create(_storageService.GetSelectedStorage());
+            var storage = _storageService.GetStorage();
             return storage.Load<FlightDto>(_storageService.GetFlightFilePath());
         }
     }

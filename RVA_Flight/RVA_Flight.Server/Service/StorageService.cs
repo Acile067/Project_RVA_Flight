@@ -1,6 +1,5 @@
 ﻿using RVA_Flight.Common.Contracts;
 using RVA_Flight.Common.Enums;
-using RVA_Flight.Server.Contracts;
 using RVA_Flight.Server.DataStorage;
 using System;
 using System.Collections.Generic;
@@ -64,11 +63,14 @@ namespace RVA_Flight.Server.Service
             return $"Selected storage: {type}";
         }
 
-        public StorageType GetSelectedStorage() =>
-            _storage is CsvDataStorage ? StorageType.Csv :
-            _storage is JsonDataStorage ? StorageType.Json :
-            StorageType.Xml;
+        public IDataStorage GetStorage()
+        {
+            if (_storage == null)
+                throw new InvalidOperationException("Storage type not selected.");
+            return _storage;
+        }
 
         public string GetFlightFilePath() => FlightFilePath;
+        public string GetCityFilePath() => CityFilePath;
     }
 }

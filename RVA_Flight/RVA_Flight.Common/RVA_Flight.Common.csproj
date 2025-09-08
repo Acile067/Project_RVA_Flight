@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Contracts\IDataStorage.cs" />
     <Compile Include="Contracts\IFlightService.cs" />
     <Compile Include="Contracts\IStorageService.cs" />
     <Compile Include="Entities\FlightDto.cs" />

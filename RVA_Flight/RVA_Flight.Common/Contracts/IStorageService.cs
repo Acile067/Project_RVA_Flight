@@ -15,7 +15,7 @@ namespace RVA_Flight.Common.Contracts
         string SelectStorage(string storageType);
 
         [OperationContract]
-        StorageType GetSelectedStorage();
+        IDataStorage GetStorage();
         [OperationContract]
         string GetFlightFilePath();
     }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RVA_Flight.Server.Contracts
+namespace RVA_Flight.Common.Contracts
 {
     public interface IDataStorage
     {

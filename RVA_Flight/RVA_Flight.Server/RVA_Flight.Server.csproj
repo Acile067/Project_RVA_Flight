@@ -47,7 +47,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Contracts\IDataStorage.cs" />
     <Compile Include="DataStorage\CsvDataStorage.cs" />
     <Compile Include="DataStorage\DataStorageFactory.cs" />
     <Compile Include="DataStorage\JsonDataStorage.cs" />
