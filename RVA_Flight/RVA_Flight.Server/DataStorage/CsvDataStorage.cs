@@ -15,13 +15,15 @@ namespace RVA_Flight.Server.DataStorage
             if (data == null)
                 throw new ArgumentNullException(nameof(data));
 
-            if (data is IEnumerable<T> list && !(data is string))
+            // Ako je već kolekcija (npr. List<City>)
+            if (data is IEnumerable<object> collection && !(data is string))
             {
-                WriteCollection(filePath, list);
+                WriteCollection(filePath, collection.Cast<object>());
             }
             else
             {
-                WriteCollection(filePath, new List<T> { data });
+                // Wrap u listu (npr. ako proslediš samo jedan objekat)
+                WriteCollection(filePath, new List<object> { data });
             }
         }
 
@@ -47,9 +49,13 @@ namespace RVA_Flight.Server.DataStorage
             }
         }
 
-        private void WriteCollection<T>(string filePath, IEnumerable<T> items)
+        private void WriteCollection(string filePath, IEnumerable<object> items)
         {
-            var properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            var enumerated = items.ToList();
+            if (!enumerated.Any()) return;
+
+            var type = enumerated.First().GetType();
+            var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
             using (var writer = new StreamWriter(filePath, false, Encoding.UTF8))
             {
@@ -57,7 +63,7 @@ namespace RVA_Flight.Server.DataStorage
                 writer.WriteLine(string.Join(",", properties.Select(p => p.Name)));
 
                 // Rows
-                foreach (var item in items)
+                foreach (var item in enumerated)
                 {
                     var values = properties.Select(p =>
                     {

@@ -16,12 +16,15 @@ namespace RVA_Flight.Server
         {
             Uri flightBaseAddress = new Uri("http://localhost:5000/FlightService");
             Uri storageBaseAddress = new Uri("http://localhost:5001/StorageService");
+            Uri cityBaseAddress = new Uri("http://localhost:5002/CityService");
 
             var storageService = new StorageService();
             var flightService = new FlightService(storageService);
+            var cityService = new CityService(storageService);
 
             using (ServiceHost flightHost = new ServiceHost(flightService, flightBaseAddress))
             using (ServiceHost storageHost = new ServiceHost(storageService, storageBaseAddress))
+            using (ServiceHost cityHost = new ServiceHost(cityService, cityBaseAddress))
             {
                 // Endpoint-i za FlightService
                 flightHost.AddServiceEndpoint(typeof(IFlightService), new BasicHttpBinding(), "");
@@ -33,19 +36,28 @@ namespace RVA_Flight.Server
                 storageHost.Description.Behaviors.Add(new ServiceMetadataBehavior { HttpGetEnabled = true, HttpGetUrl = storageBaseAddress });
                 storageHost.AddServiceEndpoint(ServiceMetadataBehavior.MexContractName, MetadataExchangeBindings.CreateMexHttpBinding(), "mex");
 
+
+                // Endpoint-i za CityService
+                cityHost.AddServiceEndpoint(typeof(ICityService), new BasicHttpBinding(), "");
+                cityHost.Description.Behaviors.Add(new ServiceMetadataBehavior { HttpGetEnabled = true, HttpGetUrl = cityBaseAddress });
+                cityHost.AddServiceEndpoint(ServiceMetadataBehavior.MexContractName, MetadataExchangeBindings.CreateMexHttpBinding(), "mex");
+
                 try
                 {
                     flightHost.Open();
                     storageHost.Open();
+                    cityHost.Open();
 
                     Console.WriteLine("WCF services are running:");
                     Console.WriteLine("FlightService: " + flightBaseAddress);
                     Console.WriteLine("StorageService: " + storageBaseAddress);
+                    Console.WriteLine("CityService: " + cityBaseAddress);
                     Console.WriteLine("Press Enter to exit...");
                     Console.ReadLine();
 
                     flightHost.Close();
                     storageHost.Close();
+                    cityHost.Close();
                 }
                 catch (Exception ex)
                 {

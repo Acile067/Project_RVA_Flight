@@ -18,5 +18,7 @@ namespace RVA_Flight.Common.Contracts
         IDataStorage GetStorage();
         [OperationContract]
         string GetFlightFilePath();
+        [OperationContract]
+        string GetCityFilePath();
     }
 }
