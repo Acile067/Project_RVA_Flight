@@ -40,6 +40,11 @@ namespace RVA_Flight.Server.Service
 
         public void SaveCity(City city)
         {
+            if (string.IsNullOrWhiteSpace(city?.Name) || string.IsNullOrWhiteSpace(city?.Country))
+            {
+                throw new FaultException("City must have both Name and Country.");
+            }
+
             var storage = _storageService.GetStorage();
 
             List<City> cities;
@@ -50,6 +55,11 @@ namespace RVA_Flight.Server.Service
             catch (FileNotFoundException)
             {
                 cities = new List<City>();
+            }
+
+            if (cities.Any(c => c.Name.Equals(city.Name, StringComparison.OrdinalIgnoreCase)))
+            {
+                throw new FaultException($"City '{city.Name}' already exists.");
             }
 
             cities.Add(city);

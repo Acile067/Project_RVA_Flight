@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -14,6 +15,17 @@ namespace RVA_Flight.Client.ViewModels
     {
         public ObservableCollection<City> Cities { get; set; }
         public City NewCity { get; set; }
+
+        private string _errorMessage;
+        public string ErrorMessage
+        {
+            get => _errorMessage;
+            set
+            {
+                _errorMessage = value;
+                OnPropertyChanged(nameof(ErrorMessage));
+            }
+        }
 
         public ICommand AddCityCommand { get; }
 
@@ -30,13 +42,29 @@ namespace RVA_Flight.Client.ViewModels
         private void AddCity(object obj)
         {
             if (string.IsNullOrWhiteSpace(NewCity?.Name) || string.IsNullOrWhiteSpace(NewCity?.Country))
+            {
+                ErrorMessage = "Both Name and Country must be provided.";
                 return;
+            }
 
-            ClientProxy.Instance.CityService.SaveCity(NewCity);
-            Cities.Add(new City { Name = NewCity.Name, Country = NewCity.Country });
+            try
+            {
+                ErrorMessage = "";
 
-            NewCity = new City();
-            OnPropertyChanged(nameof(NewCity));
+                ClientProxy.Instance.CityService.SaveCity(NewCity);
+                Cities.Add(new City { Name = NewCity.Name, Country = NewCity.Country });
+
+                NewCity = new City();
+                OnPropertyChanged(nameof(NewCity));
+            }
+            catch (FaultException ex)
+            {
+                ErrorMessage = ex.Message;
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = "Error saving city: " + ex.Message;
+            }
         }
     }
 }
