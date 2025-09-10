@@ -9,12 +9,12 @@ using System.Threading.Tasks;
 namespace RVA_Flight.Common.Contracts
 {
     [ServiceContract]
-    public interface IFlightService
+    public interface IAirplaneService
     {
         [OperationContract]
-        void SaveFlight(Flight flight);
+        void SaveAirplane(Airplane airplane);
 
         [OperationContract]
-        List<Flight> LoadFlights();
+        List<Airplane> LoadAirplanes();
     }
 }

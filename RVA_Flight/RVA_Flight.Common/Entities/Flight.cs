@@ -8,12 +8,15 @@ using System.Threading.Tasks;
 namespace RVA_Flight.Common.Entities
 {
     [DataContract]
-    public class FlightDto
+    public class Flight
     {
-        [DataMember]
-        public int Id { get; set; }
+        private string flightNumber;
 
         [DataMember]
-        public string Destination { get; set; }
+        public string FlightNumber
+        {
+            get { return flightNumber; }
+            set { flightNumber = value; }
+        }
     }
 }

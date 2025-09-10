@@ -20,5 +20,7 @@ namespace RVA_Flight.Common.Contracts
         string GetFlightFilePath();
         [OperationContract]
         string GetCityFilePath();
+        [OperationContract]
+        string GetAirplaneFilePath();
     }
 }

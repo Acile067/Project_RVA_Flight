@@ -16,6 +16,7 @@ namespace RVA_Flight.Client.Services
         private IFlightService _flightService;
         private IStorageService _storageService;
         private ICityService _cityService;
+        private IAirplaneService _airplaneService;
 
         public static ClientProxy Instance
         {
@@ -52,10 +53,17 @@ namespace RVA_Flight.Client.Services
                 new BasicHttpBinding(),
                 new EndpointAddress("http://localhost:5002/CityService"));
             _cityService = cityFactory.CreateChannel();
+
+            // AirplaneService endpoint
+            var airplaneFactory = new ChannelFactory<IAirplaneService>(
+                new BasicHttpBinding(),
+                new EndpointAddress("http://localhost:5003/AirplaneService"));
+            _airplaneService = airplaneFactory.CreateChannel();
         }
 
         public IFlightService FlightService => _flightService;
         public IStorageService StorageService => _storageService;
         public ICityService CityService => _cityService;
+        public IAirplaneService AirplaneService => _airplaneService;
     }
 }

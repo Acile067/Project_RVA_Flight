@@ -43,12 +43,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Contracts\IAirplaneService.cs" />
     <Compile Include="Contracts\ICityService.cs" />
     <Compile Include="Contracts\IDataStorage.cs" />
     <Compile Include="Contracts\IFlightService.cs" />
     <Compile Include="Contracts\IStorageService.cs" />
+    <Compile Include="Entities\Airplane.cs" />
     <Compile Include="Entities\City.cs" />
-    <Compile Include="Entities\FlightDto.cs" />
+    <Compile Include="Entities\Flight.cs" />
     <Compile Include="Enums\StorageType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

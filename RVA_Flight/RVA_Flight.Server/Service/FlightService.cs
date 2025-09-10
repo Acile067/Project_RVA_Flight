@@ -21,16 +21,14 @@ namespace RVA_Flight.Server.Service
             _storageService = storageService;
         }
 
-        public void SaveFlight(FlightDto flight)
+        public List<Flight> LoadFlights()
         {
-            var storage = _storageService.GetStorage();
-            storage.Save(_storageService.GetFlightFilePath(), flight);
+            throw new NotImplementedException();
         }
 
-        public FlightDto LoadFlight()
+        public void SaveFlight(Flight flight)
         {
-            var storage = _storageService.GetStorage();
-            return storage.Load<FlightDto>(_storageService.GetFlightFilePath());
+            throw new NotImplementedException();
         }
     }
 }

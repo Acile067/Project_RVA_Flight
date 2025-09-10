@@ -16,6 +16,7 @@ namespace RVA_Flight.Server.Service
         private IDataStorage _storage;
         private string _flightFilePath;
         private string _cityFilePath;
+        private string _airplaneFilePath;
 
         public string FlightFilePath
         {
@@ -37,6 +38,16 @@ namespace RVA_Flight.Server.Service
             }
         }
 
+        public string AirplaneFilePath
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_airplaneFilePath))
+                    throw new InvalidOperationException("Storage type not selected.");
+                return _airplaneFilePath;
+            }
+        }
+
         public string SelectStorage(string storageType)
         {
             if (!Enum.TryParse(storageType, true, out StorageType type))
@@ -49,14 +60,17 @@ namespace RVA_Flight.Server.Service
                 case StorageType.Csv:
                     _flightFilePath = "flight.csv";
                     _cityFilePath = "city.csv";
+                    _airplaneFilePath = "airplane.csv";
                     break;
                 case StorageType.Json:
                     _flightFilePath = "flight.json";
                     _cityFilePath = "city.json";
+                    _airplaneFilePath = "airplane.json";
                     break;
                 case StorageType.Xml:
                     _flightFilePath = "flight.xml";
                     _cityFilePath = "city.xml";
+                    _airplaneFilePath = "airplane.xml";
                     break;
             }
 
@@ -72,5 +86,6 @@ namespace RVA_Flight.Server.Service
 
         public string GetFlightFilePath() => FlightFilePath;
         public string GetCityFilePath() => CityFilePath;
+        public string GetAirplaneFilePath() => AirplaneFilePath;
     }
 }

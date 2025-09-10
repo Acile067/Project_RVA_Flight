@@ -33,7 +33,6 @@ namespace RVA_Flight.Server.Service
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Greška prilikom učitavanja gradova: " + ex.Message);
                 return new List<City>();
             }
         }
