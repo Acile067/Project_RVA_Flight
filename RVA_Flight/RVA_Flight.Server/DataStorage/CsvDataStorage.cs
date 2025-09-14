@@ -1,10 +1,14 @@
-﻿using RVA_Flight.Common.Contracts;
+﻿using CsvHelper;
+using CsvHelper.Configuration;
+using RVA_Flight.Common.Contracts;
+using RVA_Flight.Common.Entities;
+using RVA_Flight.Server.Mappings;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Text;
 
 namespace RVA_Flight.Server.DataStorage
 {
@@ -12,98 +16,77 @@ namespace RVA_Flight.Server.DataStorage
     {
         public void Save<T>(string filePath, T data)
         {
-            if (data == null)
-                throw new ArgumentNullException(nameof(data));
+            if (data == null) throw new ArgumentNullException(nameof(data));
 
-            // Ako je već kolekcija (npr. List<City>)
-            if (data is IEnumerable<object> collection && !(data is string))
+            IList<object> list;
+
+            if (data is IEnumerable enumerable && !(data is string))
             {
-                WriteCollection(filePath, collection.Cast<object>());
+                list = enumerable.Cast<object>().ToList();
             }
             else
             {
-                // Wrap u listu (npr. ako proslediš samo jedan objekat)
-                WriteCollection(filePath, new List<object> { data });
+                list = new List<object> { data };
+            }
+
+            var elementType = list.First().GetType();
+
+            using (var writer = new StreamWriter(filePath, false))
+            using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
+            {
+                csv.Context.RegisterClassMap(GetMap(elementType));
+                csv.WriteHeader(elementType);
+                csv.NextRecord();
+                csv.WriteRecords(list);
             }
         }
 
         public T Load<T>(string filePath)
         {
-            if (!File.Exists(filePath))
-                throw new FileNotFoundException($"File not found: {filePath}");
-
-            var type = typeof(T);
-
-            if (typeof(System.Collections.IEnumerable).IsAssignableFrom(type) && type.IsGenericType)
+            if (!File.Exists(filePath) || new FileInfo(filePath).Length == 0)
             {
-                var elementType = type.GetGenericArguments()[0];
-                var method = typeof(CsvDataStorage).GetMethod(nameof(ReadCollection), BindingFlags.NonPublic | BindingFlags.Instance);
-                var generic = method.MakeGenericMethod(elementType);
-
-                return (T)generic.Invoke(this, new object[] { filePath });
+                if (typeof(T).IsGenericType && typeof(T).GetGenericTypeDefinition() == typeof(List<>))
+                {
+                    var listElementType = typeof(T).GetGenericArguments()[0];
+                    return (T)Activator.CreateInstance(typeof(List<>).MakeGenericType(listElementType));
+                }
+                return default;
             }
-            else
+
+            Type elementType = typeof(T);
+            bool isList = false;
+
+            if (typeof(T).IsGenericType && typeof(T).GetGenericTypeDefinition() == typeof(List<>))
             {
-                var list = ReadCollection<T>(filePath);
-                return list.FirstOrDefault();
+                elementType = typeof(T).GetGenericArguments()[0];
+                isList = true;
+            }
+
+            using (var reader = new StreamReader(filePath))
+            using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
+            {
+                csv.Context.RegisterClassMap(GetMap(elementType));
+                var method = typeof(CsvReader).GetMethod("GetRecords", Type.EmptyTypes)
+                    .MakeGenericMethod(elementType);
+                var records = ((IEnumerable)method.Invoke(csv, null)).Cast<object>().ToList();
+
+                if (isList)
+                {
+                    var typedList = (IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(elementType));
+                    foreach (var r in records) typedList.Add(r);
+                    return (T)typedList;
+                }
+
+                return (T)records.FirstOrDefault();
             }
         }
 
-        private void WriteCollection(string filePath, IEnumerable<object> items)
+        private ClassMap GetMap(Type type)
         {
-            var enumerated = items.ToList();
-            if (!enumerated.Any()) return;
-
-            var type = enumerated.First().GetType();
-            var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
-
-            using (var writer = new StreamWriter(filePath, false, Encoding.UTF8))
-            {
-                // Header
-                writer.WriteLine(string.Join(",", properties.Select(p => p.Name)));
-
-                // Rows
-                foreach (var item in enumerated)
-                {
-                    var values = properties.Select(p =>
-                    {
-                        var val = p.GetValue(item);
-                        return val != null ? val.ToString().Replace(",", ";") : "";
-                    });
-                    writer.WriteLine(string.Join(",", values));
-                }
-            }
-        }
-
-        private List<T> ReadCollection<T>(string filePath)
-        {
-            var properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
-            var result = new List<T>();
-
-            var lines = File.ReadAllLines(filePath, Encoding.UTF8);
-            if (lines.Length < 2) return result;
-
-            var headers = lines[0].Split(',');
-
-            for (int i = 1; i < lines.Length; i++)
-            {
-                var values = lines[i].Split(',');
-                var obj = Activator.CreateInstance<T>();
-
-                for (int j = 0; j < headers.Length; j++)
-                {
-                    var prop = properties.FirstOrDefault(p => p.Name == headers[j]);
-                    if (prop != null && j < values.Length)
-                    {
-                        object convertedValue = Convert.ChangeType(values[j], prop.PropertyType);
-                        prop.SetValue(obj, convertedValue);
-                    }
-                }
-
-                result.Add(obj);
-            }
-
-            return result;
+            if (type == typeof(City)) return new CityMap();
+            if (type == typeof(Airplane)) return new AirplaneMap();
+            if (type == typeof(Flight)) return new FlightMap();
+            throw new InvalidOperationException($"No CSV map defined for {type.Name}");
         }
     }
 }

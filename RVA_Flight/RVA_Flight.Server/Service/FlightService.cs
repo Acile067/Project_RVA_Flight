@@ -4,6 +4,7 @@ using RVA_Flight.Common.Enums;
 using RVA_Flight.Server.DataStorage;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.ServiceModel;
 using System.Text;
@@ -23,12 +24,38 @@ namespace RVA_Flight.Server.Service
 
         public List<Flight> LoadFlights()
         {
-            throw new NotImplementedException();
+            try
+            {
+                var storage = _storageService.GetStorage();
+                return storage.Load<List<Flight>>(_storageService.GetFlightFilePath()) ?? new List<Flight>();
+            }
+            catch (FileNotFoundException)
+            {
+                return new List<Flight>();
+            }
+            catch (Exception ex)
+            {
+                return new List<Flight>();
+            }
         }
 
         public void SaveFlight(Flight flight)
         {
-            throw new NotImplementedException();
+            var storage = _storageService.GetStorage();
+
+            List<Flight> flights;
+            try
+            {
+                flights = storage.Load<List<Flight>>(_storageService.GetFlightFilePath()) ?? new List<Flight>(); ;
+            }
+            catch (FileNotFoundException)
+            {
+                flights = new List<Flight>();
+            }
+
+            flights.Add(flight);
+
+            storage.Save(_storageService.GetFlightFilePath(), flights);
         }
     }
 }

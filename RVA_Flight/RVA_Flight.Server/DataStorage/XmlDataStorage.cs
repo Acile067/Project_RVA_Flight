@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
@@ -15,10 +16,10 @@ namespace RVA_Flight.Server.DataStorage
         {
             if (data == null) throw new ArgumentNullException(nameof(data));
 
-            var serializer = new XmlSerializer(typeof(T));
+            var serializer = new DataContractSerializer(typeof(T));
             using (var stream = new FileStream(filePath, FileMode.Create))
             {
-                serializer.Serialize(stream, data);
+                serializer.WriteObject(stream, data);
             }
         }
 
@@ -27,10 +28,10 @@ namespace RVA_Flight.Server.DataStorage
             if (!File.Exists(filePath))
                 throw new FileNotFoundException($"File not found: {filePath}");
 
-            var serializer = new XmlSerializer(typeof(T));
+            var serializer = new DataContractSerializer(typeof(T));
             using (var stream = new FileStream(filePath, FileMode.Open))
             {
-                return (T)serializer.Deserialize(stream);
+                return (T)serializer.ReadObject(stream);
             }
         }
     }

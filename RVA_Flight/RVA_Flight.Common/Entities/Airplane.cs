@@ -4,40 +4,21 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace RVA_Flight.Common.Entities
 {
     [DataContract]
     public class Airplane
     {
-        private string code;
-        private string name;
-        private int capacity;
-        private int yearOfManufacture;
-
         [DataMember]
-        public string Code
-        {
-            get { return code; }
-            set { code = value; }
-        }
+        public string Code { get; set; }
         [DataMember]
-        public string Name
-        {
-            get { return name; }
-            set { name = value; }
-        }
+        public string Name { get; set; }
         [DataMember]
-        public int Capacity
-        {
-            get { return capacity; }
-            set { capacity = value; }
-        }
+        public int Capacity { get; set; }
         [DataMember]
-        public int YearOfManufacture
-        {
-            get { return yearOfManufacture; }
-            set { yearOfManufacture = value; }
-        }
+        public int YearOfManufacture { get; set; }
+        public Airplane() { }
     }
 }
