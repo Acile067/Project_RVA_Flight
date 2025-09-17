@@ -29,7 +29,7 @@ namespace RVA_Flight.Common.Entities
         public string PilotMessage { get; set; }
 
         [DataMember]
-        public int DealayMinutes { get; set; }
+        public int DelayMinutes { get; set; }
 
         [DataMember]
         public Airplane Airplane { get; set; }

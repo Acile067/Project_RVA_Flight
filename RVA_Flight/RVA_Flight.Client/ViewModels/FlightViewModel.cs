@@ -1,4 +1,5 @@
-﻿using RVA_Flight.Client.Services;
+﻿using RVA_Flight.Client.Commands;
+using RVA_Flight.Client.Services;
 using RVA_Flight.Common.Entities;
 using RVA_Flight.Common.State;
 using System;
@@ -14,6 +15,8 @@ namespace RVA_Flight.Client.ViewModels
 {
     public class FlightViewModel : BaseViewModel
     {
+        public Commands.CommandManager CommandManager { get; }
+
         public ObservableCollection<Flight> Flights { get; set; }
         public Flight NewFlight { get; set; }
 
@@ -31,6 +34,8 @@ namespace RVA_Flight.Client.ViewModels
 
         public FlightViewModel()
         {
+            CommandManager= new Commands.CommandManager();
+
             Flights = new ObservableCollection<Flight>(
                 ClientProxy.Instance.FlightService.LoadFlights() ?? new List<Flight>()
             );
@@ -47,7 +52,7 @@ namespace RVA_Flight.Client.ViewModels
             {
                 DepartureTime = DateTime.Now,
                 ArrivalTime = DateTime.Now.AddHours(1),
-                DealayMinutes = 0
+                DelayMinutes = 0
             };
 
             AddFlightCommand = new RelayCommand(AddFlight);
@@ -68,19 +73,22 @@ namespace RVA_Flight.Client.ViewModels
             {
                 ErrorMessage = "";
 
-                if (NewFlight.DealayMinutes == 0)
+                if (NewFlight.DelayMinutes == 0)
                     NewFlight.State = new OnTimeState();
                 else
                     NewFlight.State = new DelayedState();
 
-                ClientProxy.Instance.FlightService.SaveFlight(NewFlight);
-                Flights.Add(NewFlight);
-
+                AddFlightCommand add = new AddFlightCommand(Flights, NewFlight);
+                CommandManager.ExecuteCommand(add);
+                
+               
+                
+                
                 NewFlight = new Flight
                 {
                     DepartureTime = DateTime.Now,
                     ArrivalTime = DateTime.Now.AddHours(1),
-                    DealayMinutes = 0
+                    DelayMinutes = 0
                 };
                 OnPropertyChanged(nameof(NewFlight));
             }
