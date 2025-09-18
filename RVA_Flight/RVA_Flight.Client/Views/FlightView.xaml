@@ -23,8 +23,10 @@
                          ToolTip="Enter search value"/>
                 <Button Content="Search" Width="80" Margin="0,0,5,0"
                         Command="{Binding SearchCommand}" />
-                <Button Content="Show All" Width="80"
+                <Button Content="Show Flights" Width="80"
                         Command="{Binding ShowAllCommand}" />
+                <Button Content="Charter Flights" Width="80"
+                    Command="{Binding ShowChartersCommand}" />
 
                 
             </StackPanel>

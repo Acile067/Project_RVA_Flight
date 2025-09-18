@@ -1,6 +1,7 @@
 ﻿using RVA_Flight.Client.Commands;
 using RVA_Flight.Client.Services;
 using RVA_Flight.Common.Entities;
+using RVA_Flight.Common.Enums;
 using RVA_Flight.Common.State;
 using System;
 using System.Collections.Generic;
@@ -9,6 +10,7 @@ using System.Linq;
 using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace RVA_Flight.Client.ViewModels
@@ -19,6 +21,14 @@ namespace RVA_Flight.Client.ViewModels
 
         public ObservableCollection<Flight> Flights { get; set; }
         public ObservableCollection<Flight> FilteredFlights { get; set; }
+
+        public ObservableCollection<Flight> DisplayWithCharters { get; set; }
+
+
+        public ObservableCollection<CharterFlight> CharterFlights { get; set; }
+
+
+
         public Flight NewFlight { get; set; }
 
         private Flight _updatedFlight;
@@ -80,7 +90,8 @@ namespace RVA_Flight.Client.ViewModels
             set { _errorMessage = value; OnPropertyChanged(nameof(ErrorMessage)); }
         }
 
-        public List<string> FlightSearchProperties { get; } =
+     
+public List<string> FlightSearchProperties { get; } =
             new List<string>
             {
                 "Flight Number",
@@ -97,6 +108,7 @@ namespace RVA_Flight.Client.ViewModels
         public ICommand DeleteFlightCommand { get; }
         public ICommand UndoOperationCommand { get; }
         public ICommand RedoOperationCommand { get; }
+        public ICommand ShowChartersCommand { get; }
 
 
         public FlightViewModel()
@@ -107,6 +119,20 @@ namespace RVA_Flight.Client.ViewModels
                 ClientProxy.Instance.FlightService.LoadFlights() ?? new List<Flight>()
             );
             FilteredFlights = new ObservableCollection<Flight>(Flights);
+
+            CharterFlights = new ObservableCollection<CharterFlight>
+            {
+                new CharterFlight{ FlightNumber="CH100", Type=FlightType.PRIVATE, ArrivalTime=DateTime.Now.AddHours(2), Duration=TimeSpan.FromHours(2)},
+                new CharterFlight{ FlightNumber="CH101", Type=FlightType.PRIVATE, ArrivalTime=DateTime.Now.AddHours(1), Duration=TimeSpan.FromHours(3)},
+            };
+
+            DisplayWithCharters = new ObservableCollection<Flight>(Flights);
+            foreach (var c in CharterFlights)
+                DisplayWithCharters.Add(new CharterFlightAdapter(c));
+
+
+
+
 
             Cities = new ObservableCollection<City>(
                 ClientProxy.Instance.CityService.LoadCities() ?? new List<City>()
@@ -132,6 +158,7 @@ namespace RVA_Flight.Client.ViewModels
             DeleteFlightCommand = new RelayCommand(DeleteFlight, CanDeleteFlight);
             UndoOperationCommand = new RelayCommand(UndoOperation, CanUndoOperation);
             RedoOperationCommand = new RelayCommand(RedoOperation, CanRedoOperation);
+            ShowChartersCommand = new RelayCommand(ShowCharterFlights);
 
         }
 
@@ -226,6 +253,15 @@ namespace RVA_Flight.Client.ViewModels
             OnPropertyChanged(nameof(FilteredFlights));
         }
 
+        private void ShowCharterFlights(object obj)
+        {
+            FilteredFlights = new ObservableCollection<Flight>(DisplayWithCharters);
+            OnPropertyChanged(nameof(FilteredFlights));
+
+            SearchText = string.Empty;
+            SelectedSearchProperty = null;
+
+        }
         private void ShowAll(object obj)
         {
             
