@@ -53,6 +53,12 @@ namespace RVA_Flight.Server.Service
                 throw new FaultException("Charter flight must have a FlightNumber.");
             }
 
+            if (!System.Text.RegularExpressions.Regex.IsMatch(charterFlight.FlightNumber, @"^[A-Z]{3}\d{3}$", System.Text.RegularExpressions.RegexOptions.IgnoreCase))
+            {
+                log.Warn($"Invalid FlightNumber format: {charterFlight.FlightNumber}");
+                throw new FaultException("FlightNumber must be in format 3 letters followed by 3 digits (e.g., ABC123).");
+            }
+
             log.Info($"Saving charter flight: {charterFlight.FlightNumber}");
             var storage = _storageService.GetStorage();
 
