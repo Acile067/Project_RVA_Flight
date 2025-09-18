@@ -319,7 +319,7 @@ namespace RVA_Flight.Client.ViewModels
                     log.Info($"Deleting flight {SelectedFlightForDelete.FlightNumber}...");
                     DeleteFlightCommand delete = new DeleteFlightCommand(Flights, SelectedFlightForDelete);
                     CommandManager.ExecuteCommand(delete);
-                    log.Info($"Flight {SelectedFlightForDelete.FlightNumber} deleted successfully.");
+                    log.Info($"Flight deleted successfully.");
 
                     //ponistavanje filtera
 

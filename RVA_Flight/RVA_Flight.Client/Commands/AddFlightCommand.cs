@@ -17,8 +17,9 @@ namespace RVA_Flight.Client.Commands
 
         public override void Execute()
         {
-            flights.Add(flight);
             ClientProxy.Instance.FlightService.SaveFlight(flight);
+            flights.Add(flight);
+            
 
         }
 
