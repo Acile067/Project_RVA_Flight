@@ -18,7 +18,57 @@ namespace RVA_Flight.Client.ViewModels
         public Commands.CommandManager CommandManager { get; }
 
         public ObservableCollection<Flight> Flights { get; set; }
+        public ObservableCollection<Flight> FilteredFlights { get; set; }
         public Flight NewFlight { get; set; }
+
+        private Flight _updatedFlight;
+        public Flight UpdatedFlight
+        {
+            get => _updatedFlight;
+            set
+            {
+                if (_updatedFlight == value) return;
+                _updatedFlight = value;
+                OnPropertyChanged(nameof(UpdatedFlight));
+            }
+        }
+
+        private Flight _selectedFlight;
+
+        public Flight SelectedFlight
+        {
+            get => _selectedFlight;
+            set
+            {
+                if (_selectedFlight == value) return;
+                _selectedFlight = value;
+                OnPropertyChanged(nameof(SelectedFlight));
+                PrepareUpdatedFlight();
+            }
+        }
+
+        private Flight _selectedFlightForDelete;
+        public Flight SelectedFlightForDelete
+        {
+            get => _selectedFlightForDelete;
+            set { _selectedFlightForDelete = value; OnPropertyChanged(nameof(SelectedFlightForDelete)); }
+        }
+
+
+        private string _selectedSearchProperty;
+        public string SelectedSearchProperty
+        {
+            get => _selectedSearchProperty;
+            set { _selectedSearchProperty = value; OnPropertyChanged(nameof(SelectedSearchProperty)); }
+
+        }
+
+        private string _searchText;
+        public string SearchText
+        {
+            get => _searchText;
+            set { _searchText = value; OnPropertyChanged(nameof(SearchText)); }
+        }
 
         public ObservableCollection<City> Cities { get; set; }
         public ObservableCollection<Airplane> Airplanes { get; set; }
@@ -30,7 +80,24 @@ namespace RVA_Flight.Client.ViewModels
             set { _errorMessage = value; OnPropertyChanged(nameof(ErrorMessage)); }
         }
 
+        public List<string> FlightSearchProperties { get; } =
+            new List<string>
+            {
+                "Flight Number",
+                "Departure",
+                "Arrival",
+                "Airplane",
+                "State",
+                "Type",
+            };
         public ICommand AddFlightCommand { get; }
+        public ICommand SearchCommand { get; }
+        public ICommand ShowAllCommand { get; }
+        public ICommand UpdateFlightCommand { get; }
+        public ICommand DeleteFlightCommand { get; }
+        public ICommand UndoOperationCommand { get; }
+        public ICommand RedoOperationCommand { get; }
+
 
         public FlightViewModel()
         {
@@ -39,6 +106,7 @@ namespace RVA_Flight.Client.ViewModels
             Flights = new ObservableCollection<Flight>(
                 ClientProxy.Instance.FlightService.LoadFlights() ?? new List<Flight>()
             );
+            FilteredFlights = new ObservableCollection<Flight>(Flights);
 
             Cities = new ObservableCollection<City>(
                 ClientProxy.Instance.CityService.LoadCities() ?? new List<City>()
@@ -55,7 +123,16 @@ namespace RVA_Flight.Client.ViewModels
                 DelayMinutes = 0
             };
 
+            
+
             AddFlightCommand = new RelayCommand(AddFlight);
+            SearchCommand = new RelayCommand(SearchFlights);
+            ShowAllCommand = new RelayCommand(ShowAll);
+            UpdateFlightCommand = new RelayCommand(UpdateFlight);
+            DeleteFlightCommand = new RelayCommand(DeleteFlight, CanDeleteFlight);
+            UndoOperationCommand = new RelayCommand(UndoOperation, CanUndoOperation);
+            RedoOperationCommand = new RelayCommand(RedoOperation, CanRedoOperation);
+
         }
 
         private void AddFlight(object obj)
@@ -80,10 +157,18 @@ namespace RVA_Flight.Client.ViewModels
 
                 AddFlightCommand add = new AddFlightCommand(Flights, NewFlight);
                 CommandManager.ExecuteCommand(add);
-                
-               
-                
-                
+
+                //ponistavanje filtera
+
+                FilteredFlights = new ObservableCollection<Flight>(Flights);
+                OnPropertyChanged(nameof(FilteredFlights));
+
+                SearchText = string.Empty;
+                SelectedSearchProperty = null;
+
+
+
+
                 NewFlight = new Flight
                 {
                     DepartureTime = DateTime.Now,
@@ -100,6 +185,149 @@ namespace RVA_Flight.Client.ViewModels
             {
                 ErrorMessage = "Error saving flight: " + ex.Message;
             }
+        }
+
+        private void PrepareUpdatedFlight()
+        {
+            if (SelectedFlight == null)
+            {
+                UpdatedFlight = null;
+                return;
+            }
+
+           
+            UpdatedFlight = new Flight
+            {
+                FlightNumber = SelectedFlight.FlightNumber,
+                Type = SelectedFlight.Type,
+                DepartureTime = SelectedFlight.DepartureTime,
+                ArrivalTime = SelectedFlight.ArrivalTime,
+                PilotMessage = SelectedFlight.PilotMessage,
+                DelayMinutes = SelectedFlight.DelayMinutes,
+                Airplane = Airplanes.FirstOrDefault(a => a.Name == SelectedFlight.Airplane.Name),
+                Departure = Cities.FirstOrDefault(c => c.Name == SelectedFlight.Departure.Name),
+                Arrival = Cities.FirstOrDefault(c => c.Name == SelectedFlight.Arrival.Name),
+                State = SelectedFlight.State
+            };
+
+        }
+
+        private void UpdateFlight(object obj)
+        {
+            if (SelectedFlight == null || UpdatedFlight == null)
+                return; // ništa nije izabrano
+
+            // 1. ažuriraj originalni let sa vrednostima iz UpdatedFlight
+            UpdateFlightCommand update = new UpdateFlightCommand(Flights, UpdatedFlight);
+            CommandManager.ExecuteCommand(update);
+
+            // 2. osveži prikaz DataGrid-a (ako koristiš FilteredFlights)
+            FilteredFlights = new ObservableCollection<Flight>(Flights);
+            OnPropertyChanged(nameof(FilteredFlights));
+        }
+
+        private void ShowAll(object obj)
+        {
+            
+            FilteredFlights = new ObservableCollection<Flight>(Flights);
+            OnPropertyChanged(nameof(FilteredFlights));
+
+            SearchText = string.Empty;
+            SelectedSearchProperty = null;
+            
+        }
+
+        private bool CanDeleteFlight(object obj)
+        {
+            return SelectedFlightForDelete != null; // dugme je aktivno samo ako je nešto izabrano
+        }
+        private void DeleteFlight(object obj)
+        {
+            if (SelectedFlightForDelete != null)
+            {
+                try
+                {
+                   
+                    DeleteFlightCommand delete = new DeleteFlightCommand(Flights, SelectedFlightForDelete);
+                    CommandManager.ExecuteCommand(delete);
+
+                    //ponistavanje filtera
+
+                    FilteredFlights = new ObservableCollection<Flight>(Flights);
+                    OnPropertyChanged(nameof(FilteredFlights));
+
+
+                    SelectedFlightForDelete = null; // resetuj izbor
+                }
+                catch (Exception ex)
+                {
+                    //"Error deleting flight, LOGOVANJE
+                }
+            }
+        }
+
+        private bool CanUndoOperation(object obj)
+        {
+            return !CommandManager.IsUndoStackEmpty();
+        }
+
+        private void UndoOperation(object obj)
+        {
+            CommandManager.Undo();
+
+            FilteredFlights = new ObservableCollection<Flight>(Flights);
+            OnPropertyChanged(nameof(FilteredFlights));
+
+        }
+
+        private bool CanRedoOperation(object obj)
+        {
+            return !CommandManager.IsRedoStackEmpty();
+        }
+
+        private void RedoOperation(object obj)
+        {
+            CommandManager.Redo();
+
+            FilteredFlights = new ObservableCollection<Flight>(Flights);
+            OnPropertyChanged(nameof(FilteredFlights));
+        }
+        private void SearchFlights(object obj)
+        {
+            if (string.IsNullOrWhiteSpace(SearchText) || string.IsNullOrWhiteSpace(SelectedSearchProperty))
+            {
+                // ako nema unosa ili nije izabrano polje, prikaži sve letove
+                FilteredFlights = new ObservableCollection<Flight>(Flights);
+                return;
+            }
+
+            var lower = SearchText.ToLower();
+
+            var filtered = new List<Flight>();
+
+            foreach (Flight f in Flights)
+            {
+                bool match = false;
+
+                if (SelectedSearchProperty == "Flight Number")
+                    match = f.FlightNumber != null && f.FlightNumber.ToLower().Equals(lower);
+                else if (SelectedSearchProperty == "Departure")
+                    match = f.Departure != null && f.Departure.Name.ToLower().Equals(lower);
+                else if (SelectedSearchProperty == "Arrival")
+                    match = f.Arrival != null && f.Arrival.Name.ToLower().Equals(lower);
+                else if (SelectedSearchProperty == "Airplane")
+                    match = f.Airplane != null && f.Airplane.Name.ToLower().Equals(lower);
+                else if (SelectedSearchProperty == "Type")
+                    match = f.Type.ToString().ToLower().Equals(lower);
+                else if (SelectedSearchProperty == "State")
+                    match = f.State != null && f.State.Name.ToLower().Equals(lower);
+
+                if (match)
+                    filtered.Add(f);
+            }
+
+            FilteredFlights = new ObservableCollection<Flight>(filtered);
+            OnPropertyChanged(nameof(FilteredFlights));
         }
     }
 }

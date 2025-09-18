@@ -6,10 +6,29 @@
              xmlns:local="clr-namespace:RVA_Flight.Client.Views"
              xmlns:localEnums="clr-namespace:RVA_Flight.Client.Helpers"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="800" d:DesignWidth="900">
     <Grid Margin="10">
         <StackPanel>
-            <DataGrid ItemsSource="{Binding Flights}" AutoGenerateColumns="False" Height="200"
+            <Label Content="Flights" 
+                   FontSize="24" 
+                   FontWeight="Bold" 
+                   Margin="0,-5,0,10" />
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,10" VerticalAlignment="Center" HorizontalAlignment="Left">
+                <Label Content="Search by:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                <ComboBox Width="150" Margin="0,0,10,0"
+                          ItemsSource="{Binding FlightSearchProperties}" 
+                          SelectedItem="{Binding SelectedSearchProperty}" />
+                <TextBox Width="200" Margin="0,0,10,0"
+                         Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" 
+                         ToolTip="Enter search value"/>
+                <Button Content="Search" Width="80" Margin="0,0,5,0"
+                        Command="{Binding SearchCommand}" />
+                <Button Content="Show All" Width="80"
+                        Command="{Binding ShowAllCommand}" />
+
+                
+            </StackPanel>
+            <DataGrid ItemsSource="{Binding FilteredFlights}" AutoGenerateColumns="False" Height="200"
                       Margin="0,0,0,10" IsReadOnly="True">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Flight Number" Binding="{Binding FlightNumber}" Width="*"/>
@@ -22,57 +41,165 @@
                     <DataGridTextColumn Header="Type" Binding="{Binding Type}" Width="*"/>
                 </DataGrid.Columns>
             </DataGrid>
+            <TextBlock Text="Add" FontSize="16" FontWeight="Bold"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                <StackPanel Orientation="Vertical" Margin="5">
 
-            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                <Label Content="Flight No:" VerticalAlignment="Center"/>
-                <TextBox Width="100" Margin="5,0" 
-             Text="{Binding NewFlight.FlightNumber, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBlock Text="Flight Number:" FontSize="12"/>
+                    <TextBox Width="150" Height="25"
+                Text="{Binding NewFlight.FlightNumber, UpdateSourceTrigger=PropertyChanged}"/>
 
-                <Label Content="Departure:" VerticalAlignment="Center"/>
-                <ComboBox Width="120" Margin="5,0"
+                    <TextBlock Text="Departure:" FontSize="12"/>
+                    <ComboBox Width="150" Height="25"
                     ItemsSource="{Binding Cities}"
                     DisplayMemberPath="Name"
                     SelectedItem="{Binding NewFlight.Departure}" />
 
-                <Label Content="Arrival:" VerticalAlignment="Center"/>
-                <ComboBox Width="120" Margin="5,0"
+                    <TextBlock Text="Arrival:" FontSize="12"/>
+                    <ComboBox Width="150" Height="25" 
                     ItemsSource="{Binding Cities}"
                     DisplayMemberPath="Name"
                     SelectedItem="{Binding NewFlight.Arrival}" />
+                </StackPanel>
+
+
+
+                <StackPanel Orientation="Vertical" Margin="5">
+                    <TextBlock Text="Departure Time:" FontSize="12"/>
+                    <DatePicker SelectedDate="{Binding NewFlight.DepartureTime}" Width="150" Height="25"/>
+
+                    <TextBlock Text="Arrival Time:" FontSize="12"/>
+                    <DatePicker SelectedDate="{Binding NewFlight.ArrivalTime}" Width="150" Height="25"/>
+
+                    <TextBlock Text="Airplane:" FontSize="12"/>
+                    <ComboBox Width="150" Height="25"
+                        ItemsSource="{Binding Airplanes}"
+                        DisplayMemberPath="Name"
+                        SelectedItem="{Binding NewFlight.Airplane}" />
+                </StackPanel>
+
+
+                <StackPanel Orientation="Vertical" Margin="5">
+                    <TextBlock Text="Type:" FontSize="12"/>
+                    <ComboBox Width="150" Height="25"
+                    SelectedItem="{Binding NewFlight.Type}"
+                    ItemsSource="{x:Static localEnums:FlightTypeValues.All}" />
+
+                    <TextBlock Text="Pilot Message:" FontSize="12"/>
+                    <TextBox Width="150" Height="68" TextWrapping="Wrap" AcceptsReturn="True"
+                        Text="{Binding NewFlight.PilotMessage, UpdateSourceTrigger=PropertyChanged}"/>
+                </StackPanel>
+                <StackPanel Orientation="Vertical" Margin="5">
+
+                    <TextBlock Text="Delay (min):" FontSize="12"/>
+                    <TextBox Width="100" Height="25"
+                        Text="{Binding NewFlight.DelayMinutes, UpdateSourceTrigger=PropertyChanged}"/>
 
                 
+                <Button Content="Add Flight" Width="100" Height="25" Command="{Binding AddFlightCommand}" Margin="5"/>
+                </StackPanel>
+
+                
+
+
             </StackPanel>
+            <TextBlock Text="{Binding ErrorMessage}" Foreground="Red" FontWeight="Bold"/>
 
-            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                <Label Content="Dep Time:" VerticalAlignment="Center"/>
-                <DatePicker SelectedDate="{Binding NewFlight.DepartureTime}" Width="120" Margin="5,0"/>
-                <Label Content="Arr Time:" VerticalAlignment="Center"/>
-                <DatePicker SelectedDate="{Binding NewFlight.ArrivalTime}" Width="120" Margin="5,0"/>
-                <Label Content="Airplane:" VerticalAlignment="Center"/>
-                <ComboBox Width="120" Margin="5,0"
-                    ItemsSource="{Binding Airplanes}"
-                    DisplayMemberPath="Name"
-                    SelectedItem="{Binding NewFlight.Airplane}" />
+            <TextBlock Text="Update" FontSize="16" FontWeight="Bold"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                <StackPanel Orientation="Vertical" Margin="5">
+
+                    <TextBlock Text="Flight Number:" FontSize="12"/>
+                    <ComboBox Width="150" Height="25"
+                        ItemsSource="{Binding Flights}"
+                        DisplayMemberPath="FlightNumber"
+                        SelectedItem="{Binding SelectedFlight, Mode=TwoWay}" />
+
+                    <TextBlock Text="Departure:" FontSize="12"/>
+                    <ComboBox Width="150" Height="25"
+                        ItemsSource="{Binding Cities}"
+                        DisplayMemberPath="Name"
+                        SelectedValuePath="Id"
+                        SelectedItem="{Binding UpdatedFlight.Departure, Mode=TwoWay}" />
+
+                    <TextBlock Text="Arrival:" FontSize="12"/>
+                    <ComboBox Width="150" Height="25" 
+                        ItemsSource="{Binding Cities}"
+                        DisplayMemberPath="Name"
+                        SelectedItem="{Binding UpdatedFlight.Arrival}" />
+                </StackPanel>
+
+
+
+                <StackPanel Orientation="Vertical" Margin="5">
+                    <TextBlock Text="Departure Time:" FontSize="12"/>
+                    <DatePicker SelectedDate="{Binding UpdatedFlight.DepartureTime}" Width="150" Height="25"/>
+
+                    <TextBlock Text="Arrival Time:" FontSize="12"/>
+                    <DatePicker SelectedDate="{Binding UpdatedFlight.ArrivalTime}" Width="150" Height="25"/>
+
+                    <TextBlock Text="Airplane:" FontSize="12"/>
+                    <ComboBox Width="150" Height="25"
+                        ItemsSource="{Binding Airplanes}"
+                        DisplayMemberPath="Name"
+                        SelectedItem="{Binding UpdatedFlight.Airplane}" />
+                </StackPanel>
+
+
+                <StackPanel Orientation="Vertical" Margin="5">
+                    <TextBlock Text="Type:" FontSize="12"/>
+                    <ComboBox Width="150" Height="25"
+                    SelectedItem="{Binding UpdatedFlight.Type}"
+                    ItemsSource="{x:Static localEnums:FlightTypeValues.All}" />
+
+                    <TextBlock Text="Pilot Message:" FontSize="12"/>
+                    <TextBox Width="150" Height="68" TextWrapping="Wrap" AcceptsReturn="True"
+            Text="{Binding UpdatedFlight.PilotMessage, UpdateSourceTrigger=PropertyChanged}"/>
+                </StackPanel>
+                <StackPanel Orientation="Vertical" Margin="5">
+
+                    <TextBlock Text="Delay (min):" FontSize="12"/>
+                    <TextBox Width="100" Height="25"
+            Text="{Binding UpdatedFlight.DelayMinutes, UpdateSourceTrigger=PropertyChanged}"/>
+
+
+                    <Button Content="Update Flight" Width="100" Height="25" Command="{Binding UpdateFlightCommand}" Margin="5"/>
+                </StackPanel>
+
+
+
+
             </StackPanel>
+            <TextBlock Text="{Binding ErrorMessage}" Foreground="Red" FontWeight="Bold"/>
+            
+            <StackPanel Orientation="Horizontal">
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="Delete" FontSize="16" FontWeight="Bold"/>
+                    <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Flight Number:" FontSize="12" Margin="5"/>
 
-            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                <Label Content="Pilot Message:" VerticalAlignment="Center"/>
-                <TextBox Width="150" Margin="5,0"
-                    Text="{Binding NewFlight.PilotMessage, UpdateSourceTrigger=PropertyChanged}"/>
+                            <ComboBox Width="150" Height="25"
+                                ItemsSource="{Binding Flights}"
+                                DisplayMemberPath="FlightNumber"
+                                SelectedItem="{Binding SelectedFlightForDelete, Mode=TwoWay}" Margin="5"/>
+                            <Button Content="Delete Flight" Width="100" Height="25" Command="{Binding DeleteFlightCommand}" Margin="5"/>
 
-                <Label Content="Delay (min):" VerticalAlignment="Center"/>
-                <TextBox Width="60" Margin="5,0"
-                    Text="{Binding NewFlight.DealayMinutes, UpdateSourceTrigger=PropertyChanged}"/>
-
-                <Label Content="Type:" VerticalAlignment="Center"/>
-                <ComboBox Width="120" Margin="5,0"
-                  SelectedItem="{Binding NewFlight.Type}"
-                  ItemsSource="{x:Static localEnums:FlightTypeValues.All}" />
+                        </StackPanel>
+                    <TextBlock Text="{Binding ErrorMessage}" Foreground="Red" FontWeight="Bold"/>
+                </StackPanel>
+            
+                <StackPanel Orientation="Vertical" Margin="70,0,0,0">
+                    <TextBlock Text="Undo/Redo Operation" FontSize="16" FontWeight="Bold"/>
+            <StackPanel Orientation="Horizontal">
+                <Button Content="Undo" Width="50" Height="25" Command="{Binding UndoOperationCommand}" Margin="5"/>
+                <Button Content="Redo" Width="50" Height="25" Command="{Binding RedoOperationCommand}" Margin="5"/>
             </StackPanel>
+            </StackPanel>
+            </StackPanel>
+           
 
-            <Button Content="Add Flight" Command="{Binding AddFlightCommand}" Width="120" />
 
-            <TextBlock Text="{Binding ErrorMessage}" Foreground="Red" FontWeight="Bold" Margin="0,10,0,0"/>
+
         </StackPanel>
     </Grid>
 </UserControl>

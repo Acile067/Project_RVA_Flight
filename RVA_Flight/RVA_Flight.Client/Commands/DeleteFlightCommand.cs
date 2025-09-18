@@ -9,25 +9,23 @@ using System.Threading.Tasks;
 
 namespace RVA_Flight.Client.Commands
 {
-    public class AddFlightCommand:FlightCommand
+    public class DeleteFlightCommand:FlightCommand
     {
-        public AddFlightCommand(ObservableCollection<Flight> flights, Flight flight)
+        public DeleteFlightCommand(ObservableCollection<Flight> flights, Flight flight)
         : base(flights, flight)
         { }
 
         public override void Execute()
         {
-            flights.Add(flight);
-            ClientProxy.Instance.FlightService.SaveFlight(flight);
+            flights.Remove(flight);
+            ClientProxy.Instance.FlightService.DeleteFlight(flight);
 
         }
 
         public override void Undo()
         {
-            flights.Remove(flight);
-            ClientProxy.Instance.FlightService.DeleteFlight(flight);
-
-
+            flights.Add(flight);
+            ClientProxy.Instance.FlightService.SaveFlight(flight);
         }
     }
 }

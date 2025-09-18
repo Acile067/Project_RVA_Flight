@@ -18,6 +18,15 @@ namespace RVA_Flight.Client.Commands
             undoStack.Push(command);
         }
 
+        public bool IsUndoStackEmpty()
+        {
+            return undoStack.Count == 0;
+        }
+
+        public bool IsRedoStackEmpty()
+        {
+            return redoStack.Count == 0;
+        }
         public void Undo()
         {
             if (undoStack.Count > 0)
