@@ -24,7 +24,9 @@ namespace RVA_Flight.Client.Views
         public FlightStateSimulationView()
         {
             InitializeComponent();
-            
+            this.DataContext = new FlightStateSimulationViewModel();
+
+
         }
     }
 }
