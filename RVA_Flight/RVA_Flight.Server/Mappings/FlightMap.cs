@@ -15,7 +15,7 @@ namespace RVA_Flight.Server.Mappings
             Map(f => f.FlightNumber);
             Map(f => f.DepartureTime);
             Map(f => f.ArrivalTime);
-            Map(f => f.DealayMinutes);
+            Map(f => f.DelayMinutes);
             Map(f => f.Type);
             Map(f => f.PilotMessage);
             Map(f => f.StateName);

@@ -83,7 +83,7 @@ LiveCharts2 grafikon: Radial area
 Na prikazu Letova (Flights) treba dodati dugme koje će dodati i prikaz CharterFlights u istom DataGridu
 
 </Text>
-        <Location left="73" top="623" />
+        <Location left="73" top="583" />
         <Size width="311" height="193" />
       </Entity>
       <Entity type="Comment">
@@ -157,6 +157,7 @@ Na prikazu Letova (Flights) treba dodati dugme koje će dodati i prikaz CharterF
         <Location left="539" top="82" />
         <Size width="162" height="216" />
         <Collapsed>False</Collapsed>
+        <Member type="Method">public override void Handle()</Member>
         <Modifier>None</Modifier>
       </Entity>
       <Entity type="Class">
@@ -165,6 +166,7 @@ Na prikazu Letova (Flights) treba dodati dugme koje će dodati i prikaz CharterF
         <Location left="365" top="82" />
         <Size width="162" height="216" />
         <Collapsed>False</Collapsed>
+        <Member type="Method">public override void Handle()</Member>
         <Modifier>None</Modifier>
       </Entity>
       <Entity type="Class">
@@ -173,6 +175,7 @@ Na prikazu Letova (Flights) treba dodati dugme koje će dodati i prikaz CharterF
         <Location left="715" top="82" />
         <Size width="162" height="216" />
         <Collapsed>False</Collapsed>
+        <Member type="Method">public override void Handle()</Member>
         <Modifier>None</Modifier>
       </Entity>
       <Entity type="Class">
@@ -181,42 +184,56 @@ Na prikazu Letova (Flights) treba dodati dugme koje će dodati i prikaz CharterF
         <Location left="1116" top="964" />
         <Size width="162" height="216" />
         <Collapsed>False</Collapsed>
-        <Member type="Field">protected Flight _flight</Member>
+        <Member type="Field">protected Flight flight</Member>
+        <Member type="Field">protected ObservableCollection&lt;Flight&gt; flights</Member>
+        <Member type="Method">public abstract void Undo()</Member>
+        <Member type="Method">public abstract void Execute()</Member>
         <Modifier>Abstract</Modifier>
       </Entity>
       <Entity type="Class">
-        <Name>Invoker</Name>
+        <Name>CommandManager</Name>
         <Access>Public</Access>
-        <Location left="1364" top="964" />
+        <Location left="1604" top="964" />
         <Size width="162" height="216" />
         <Collapsed>False</Collapsed>
-        <Member type="Field">private Stack&lt;FlightCommand&gt; undoStack</Member>
-        <Member type="Field">private Stack&lt;FlighttCommand&gt; redoStack</Member>
-        <Member type="Method">public void ExecuteCommand(FlightCommand command)</Member>
+        <Member type="Field">private Stack&lt;IFlightCommand&gt; undoStack</Member>
+        <Member type="Field">private Stack&lt;IFlighttCommand&gt; redoStack</Member>
+        <Member type="Method">public void ExecuteCommand(IFlightCommand command)</Member>
+        <Member type="Method">public void Undo()</Member>
+        <Member type="Method">public void Redo()</Member>
+        <Member type="Method">public bool IsUndoStackEmpty()</Member>
+        <Member type="Method">public bool IsRedoStackEmpty()</Member>
         <Modifier>None</Modifier>
       </Entity>
       <Entity type="Class">
-        <Name>AddCommand</Name>
+        <Name>AddFlightCommand</Name>
         <Access>Public</Access>
         <Location left="930" top="1279" />
         <Size width="162" height="216" />
         <Collapsed>False</Collapsed>
+        <Member type="Method">public override void Undo()</Member>
+        <Member type="Method">public override void Execute()</Member>
         <Modifier>None</Modifier>
       </Entity>
       <Entity type="Class">
-        <Name>DeleteCommand</Name>
+        <Name>DeleteFlightCommand</Name>
         <Access>Public</Access>
-        <Location left="1116" top="1278" />
+        <Location left="1116" top="1279" />
         <Size width="162" height="216" />
         <Collapsed>False</Collapsed>
+        <Member type="Method">public override void Undo()</Member>
+        <Member type="Method">public override void Execute()</Member>
         <Modifier>None</Modifier>
       </Entity>
       <Entity type="Class">
-        <Name>UpdateCommand</Name>
+        <Name>UpdateFlightCommand</Name>
         <Access>Public</Access>
         <Location left="1300" top="1279" />
         <Size width="162" height="216" />
         <Collapsed>False</Collapsed>
+        <Member type="Field">private Flight oldFlight</Member>
+        <Member type="Method">public override void Undo()</Member>
+        <Member type="Method">public override void Execute()</Member>
         <Modifier>None</Modifier>
       </Entity>
       <Entity type="Interface">
@@ -253,6 +270,15 @@ Na prikazu Letova (Flights) treba dodati dugme koje će dodati i prikaz CharterF
         <Value>Csv</Value>
         <Value>Json</Value>
         <Value>Xml</Value>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IFlightCommand</Name>
+        <Access>Public</Access>
+        <Location left="1349" top="964" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">void Execute()</Member>
+        <Member type="Method">void Undo()</Member>
       </Entity>
     </Entities>
     <Relationships>
@@ -324,23 +350,6 @@ Na prikazu Letova (Flights) treba dodati dugme koje će dodati i prikaz CharterF
           <Y>828</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Association" first="14" second="0">
-        <Label>state</Label>
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>621</X>
-          <Y>617</Y>
-        </BendPoint>
-        <BendPoint relativeToStartShape="False">
-          <X>698</X>
-          <Y>754</Y>
-        </BendPoint>
-        <Direction>Unidirectional</Direction>
-        <AssociationType>Aggregation</AssociationType>
-        <StartMultiplicity>0..*</StartMultiplicity>
-        <EndMultiplicity>1</EndMultiplicity>
-      </Relationship>
       <Relationship type="Generalization" first="16" second="14">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
@@ -366,16 +375,6 @@ Na prikazu Letova (Flights) treba dodati dugme koje će dodati i prikaz CharterF
         <AssociationType>Association</AssociationType>
         <StartMultiplicity>0..*</StartMultiplicity>
         <EndMultiplicity>1</EndMultiplicity>
-      </Relationship>
-      <Relationship type="Association" first="19" second="18">
-        <Label>
-        </Label>
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-        <Direction>Unidirectional</Direction>
-        <AssociationType>Aggregation</AssociationType>
-        <StartMultiplicity>0..*</StartMultiplicity>
-        <EndMultiplicity>0..*</EndMultiplicity>
       </Relationship>
       <Relationship type="Generalization" first="20" second="18">
         <StartOrientation>Vertical</StartOrientation>
@@ -434,6 +433,33 @@ Na prikazu Letova (Flights) treba dodati dugme koje će dodati i prikaz CharterF
         </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Association" first="19" second="27">
+        <Label>
+        </Label>
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Aggregation</AssociationType>
+        <StartMultiplicity>0..*</StartMultiplicity>
+        <EndMultiplicity>0..*</EndMultiplicity>
+      </Relationship>
+      <Relationship type="Realization" first="18" second="27">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Association" first="0" second="14">
+        <Label>State</Label>
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>793</X>
+          <Y>622</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Aggregation</AssociationType>
+        <StartMultiplicity>0..1</StartMultiplicity>
+        <EndMultiplicity>1</EndMultiplicity>
       </Relationship>
     </Relationships>
   </ProjectItem>

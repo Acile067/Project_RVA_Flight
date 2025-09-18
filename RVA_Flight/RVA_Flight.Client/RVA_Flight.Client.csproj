@@ -56,6 +56,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Commands\AddFlightCommand.cs" />
+    <Compile Include="Commands\CommandManager.cs" />
+    <Compile Include="Commands\DeleteFlightCommand.cs" />
+    <Compile Include="Commands\FlightCommand.cs" />
+    <Compile Include="Commands\IFlightCommand.cs" />
+    <Compile Include="Commands\UpdateFlightCommand.cs" />
     <Compile Include="Helpers\FlightTypeValues.cs" />
     <Compile Include="Services\ClientProxy.cs" />
     <Compile Include="ViewModels\AirplaneViewModel.cs" />

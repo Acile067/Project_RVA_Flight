@@ -49,6 +49,9 @@
     <Compile Include="Contracts\IFlightService.cs" />
     <Compile Include="Contracts\IStorageService.cs" />
     <Compile Include="Entities\Airplane.cs" />
+    <Compile Include="Entities\BaseFlight.cs" />
+    <Compile Include="Entities\CharterFlight.cs" />
+    <Compile Include="Entities\CharterFlightAdapter.cs" />
     <Compile Include="Entities\City.cs" />
     <Compile Include="Entities\Flight.cs" />
     <Compile Include="Enums\FlightType.cs" />

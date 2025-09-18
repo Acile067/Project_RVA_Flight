@@ -57,5 +57,30 @@ namespace RVA_Flight.Server.Service
 
             storage.Save(_storageService.GetFlightFilePath(), flights);
         }
+
+        public void DeleteFlight(Flight flight)
+        {
+            var storage = _storageService.GetStorage();
+
+            List<Flight> flights;
+            try
+            {
+                flights = storage.Load<List<Flight>>(_storageService.GetFlightFilePath()) ?? new List<Flight>(); ;
+            }
+            catch (FileNotFoundException)
+            {
+                flights = new List<Flight>();
+            }
+
+            var flightToRemove = flights.FirstOrDefault(f => f.FlightNumber == flight.FlightNumber);
+
+            if (flightToRemove != null)
+            {
+                flights.Remove(flightToRemove);
+            }
+            
+
+            storage.Save(_storageService.GetFlightFilePath(), flights);
+        }
     }
 }

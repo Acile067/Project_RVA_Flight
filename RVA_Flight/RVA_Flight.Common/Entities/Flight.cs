@@ -14,34 +14,34 @@ namespace RVA_Flight.Common.Entities
     public class Flight
     {
         [DataMember]
-        public string FlightNumber { get; set; }
+        public virtual string FlightNumber { get; set; }
 
         [DataMember]
-        public FlightType Type { get; set; }
+        public virtual FlightType Type { get; set; }
 
         [DataMember]
-        public DateTime ArrivalTime { get; set; }
+        public virtual DateTime ArrivalTime { get; set; }
 
         [DataMember]
-        public DateTime DepartureTime { get; set; }
+        public  virtual DateTime DepartureTime { get; set; }
 
         [DataMember]
-        public string PilotMessage { get; set; }
+        public virtual string PilotMessage { get; set; }
 
         [DataMember]
-        public int DealayMinutes { get; set; }
+        public virtual int DelayMinutes { get; set; }
 
         [DataMember]
-        public Airplane Airplane { get; set; }
+        public virtual Airplane Airplane { get; set; }
 
         [DataMember]
-        public City Arrival { get; set; }
+        public virtual City Arrival { get; set; }
 
         [DataMember]
-        public City Departure { get; set; }
+        public virtual City Departure { get; set; }
 
         [DataMember]
-        public string StateName
+        public virtual string StateName
         {
             get { return State?.Name; }
             set

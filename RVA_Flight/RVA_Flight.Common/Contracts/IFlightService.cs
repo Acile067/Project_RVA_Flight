@@ -15,6 +15,11 @@ namespace RVA_Flight.Common.Contracts
         void SaveFlight(Flight flight);
 
         [OperationContract]
+        void DeleteFlight(Flight flight);
+
+
+
+        [OperationContract]
         List<Flight> LoadFlights();
     }
 }

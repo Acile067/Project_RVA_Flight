@@ -7,7 +7,7 @@
         xmlns:viewmodels="clr-namespace:RVA_Flight.Client.ViewModels"
         xmlns:views="clr-namespace:RVA_Flight.Client.Views"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Height="800" Width="900" WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis"/>
         
