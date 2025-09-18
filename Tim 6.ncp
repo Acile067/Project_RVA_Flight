@@ -181,42 +181,56 @@ Na prikazu Letova (Flights) treba dodati dugme koje će dodati i prikaz CharterF
         <Location left="1116" top="964" />
         <Size width="162" height="216" />
         <Collapsed>False</Collapsed>
-        <Member type="Field">protected Flight _flight</Member>
+        <Member type="Field">protected Flight flight</Member>
+        <Member type="Field">protected ObservableCollection&lt;Flight&gt; flights</Member>
+        <Member type="Method">public abstract void Undo()</Member>
+        <Member type="Method">public abstract void Execute()</Member>
         <Modifier>Abstract</Modifier>
       </Entity>
       <Entity type="Class">
-        <Name>Invoker</Name>
+        <Name>CommandManager</Name>
         <Access>Public</Access>
-        <Location left="1364" top="964" />
+        <Location left="1604" top="964" />
         <Size width="162" height="216" />
         <Collapsed>False</Collapsed>
-        <Member type="Field">private Stack&lt;FlightCommand&gt; undoStack</Member>
-        <Member type="Field">private Stack&lt;FlighttCommand&gt; redoStack</Member>
-        <Member type="Method">public void ExecuteCommand(FlightCommand command)</Member>
+        <Member type="Field">private Stack&lt;IFlightCommand&gt; undoStack</Member>
+        <Member type="Field">private Stack&lt;IFlighttCommand&gt; redoStack</Member>
+        <Member type="Method">public void ExecuteCommand(IFlightCommand command)</Member>
+        <Member type="Method">public void Undo()</Member>
+        <Member type="Method">public void Redo()</Member>
+        <Member type="Method">public bool IsUndoStackEmpty()</Member>
+        <Member type="Method">public bool IsRedoStackEmpty()</Member>
         <Modifier>None</Modifier>
       </Entity>
       <Entity type="Class">
-        <Name>AddCommand</Name>
+        <Name>AddFlightCommand</Name>
         <Access>Public</Access>
         <Location left="930" top="1279" />
         <Size width="162" height="216" />
         <Collapsed>False</Collapsed>
+        <Member type="Method">public override void Undo()</Member>
+        <Member type="Method">public override void Execute()</Member>
         <Modifier>None</Modifier>
       </Entity>
       <Entity type="Class">
-        <Name>DeleteCommand</Name>
+        <Name>DeleteFlightCommand</Name>
         <Access>Public</Access>
-        <Location left="1116" top="1278" />
+        <Location left="1116" top="1279" />
         <Size width="162" height="216" />
         <Collapsed>False</Collapsed>
+        <Member type="Method">public override void Undo()</Member>
+        <Member type="Method">public override void Execute()</Member>
         <Modifier>None</Modifier>
       </Entity>
       <Entity type="Class">
-        <Name>UpdateCommand</Name>
+        <Name>UpdateFlightCommand</Name>
         <Access>Public</Access>
         <Location left="1300" top="1279" />
         <Size width="162" height="216" />
         <Collapsed>False</Collapsed>
+        <Member type="Field">private Flight oldFlight</Member>
+        <Member type="Method">public override void Undo()</Member>
+        <Member type="Method">public override void Execute()</Member>
         <Modifier>None</Modifier>
       </Entity>
       <Entity type="Interface">
@@ -253,6 +267,15 @@ Na prikazu Letova (Flights) treba dodati dugme koje će dodati i prikaz CharterF
         <Value>Csv</Value>
         <Value>Json</Value>
         <Value>Xml</Value>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IFlightCommand</Name>
+        <Access>Public</Access>
+        <Location left="1349" top="964" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">void Execute()</Member>
+        <Member type="Method">void Undo()</Member>
       </Entity>
     </Entities>
     <Relationships>
@@ -308,8 +331,6 @@ Na prikazu Letova (Flights) treba dodati dugme koje će dodati i prikaz CharterF
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="13" second="3">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -354,8 +375,6 @@ Na prikazu Letova (Flights) treba dodati dugme koje će dodati i prikaz CharterF
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="18" second="0">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="False">
@@ -366,16 +385,6 @@ Na prikazu Letova (Flights) treba dodati dugme koje će dodati i prikaz CharterF
         <AssociationType>Association</AssociationType>
         <StartMultiplicity>0..*</StartMultiplicity>
         <EndMultiplicity>1</EndMultiplicity>
-      </Relationship>
-      <Relationship type="Association" first="19" second="18">
-        <Label>
-        </Label>
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-        <Direction>Unidirectional</Direction>
-        <AssociationType>Aggregation</AssociationType>
-        <StartMultiplicity>0..*</StartMultiplicity>
-        <EndMultiplicity>0..*</EndMultiplicity>
       </Relationship>
       <Relationship type="Generalization" first="20" second="18">
         <StartOrientation>Vertical</StartOrientation>
@@ -394,8 +403,6 @@ Na prikazu Letova (Flights) treba dodati dugme koje će dodati i prikaz CharterF
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="0" second="23">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -404,8 +411,6 @@ Na prikazu Letova (Flights) treba dodati dugme koje će dodati i prikaz CharterF
         <EndMultiplicity>0..*</EndMultiplicity>
       </Relationship>
       <Relationship type="Dependency" first="25" second="26">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="False">
@@ -414,14 +419,10 @@ Na prikazu Letova (Flights) treba dodati dugme koje će dodati i prikaz CharterF
         </BendPoint>
       </Relationship>
       <Relationship type="Dependency" first="5" second="12">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Dependency" first="0" second="12">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="False">
@@ -430,8 +431,18 @@ Na prikazu Letova (Flights) treba dodati dugme koje će dodati i prikaz CharterF
         </BendPoint>
       </Relationship>
       <Relationship type="Dependency" first="25" second="8">
-        <Label>
-        </Label>
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Association" first="19" second="27">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Aggregation</AssociationType>
+        <StartMultiplicity>0..*</StartMultiplicity>
+        <EndMultiplicity>0..*</EndMultiplicity>
+      </Relationship>
+      <Relationship type="Realization" first="18" second="27">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
