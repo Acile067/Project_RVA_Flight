@@ -236,22 +236,6 @@ Na prikazu Letova (Flights) treba dodati dugme koje će dodati i prikaz CharterF
         <Member type="Method">public override void Execute()</Member>
         <Modifier>None</Modifier>
       </Entity>
-      <Entity type="Interface">
-        <Name>IObserver</Name>
-        <Access>Public</Access>
-        <Location left="768" top="381" />
-        <Size width="162" height="216" />
-        <Collapsed>False</Collapsed>
-        <Member type="Method">void Update(Flight flight)</Member>
-      </Entity>
-      <Entity type="Class">
-        <Name>ClientView</Name>
-        <Access>Public</Access>
-        <Location left="1018" top="376" />
-        <Size width="162" height="216" />
-        <Collapsed>False</Collapsed>
-        <Modifier>None</Modifier>
-      </Entity>
       <Entity type="Class">
         <Name>DataStorageFactory</Name>
         <Access>Public</Access>
@@ -388,21 +372,7 @@ Na prikazu Letova (Flights) treba dodati dugme koje će dodati i prikaz CharterF
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Realization" first="24" second="23">
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-      </Relationship>
-      <Relationship type="Association" first="0" second="23">
-        <Label>
-        </Label>
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-        <Direction>Unidirectional</Direction>
-        <AssociationType>Composition</AssociationType>
-        <StartMultiplicity>1</StartMultiplicity>
-        <EndMultiplicity>0..*</EndMultiplicity>
-      </Relationship>
-      <Relationship type="Dependency" first="25" second="26">
+      <Relationship type="Dependency" first="23" second="24">
         <Label>
         </Label>
         <StartOrientation>Vertical</StartOrientation>
@@ -428,13 +398,13 @@ Na prikazu Letova (Flights) treba dodati dugme koje će dodati i prikaz CharterF
           <Y>728</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Dependency" first="25" second="8">
+      <Relationship type="Dependency" first="23" second="8">
         <Label>
         </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
-      <Relationship type="Association" first="19" second="27">
+      <Relationship type="Association" first="19" second="25">
         <Label>
         </Label>
         <StartOrientation>Horizontal</StartOrientation>
@@ -444,7 +414,7 @@ Na prikazu Letova (Flights) treba dodati dugme koje će dodati i prikaz CharterF
         <StartMultiplicity>0..*</StartMultiplicity>
         <EndMultiplicity>0..*</EndMultiplicity>
       </Relationship>
-      <Relationship type="Realization" first="18" second="27">
+      <Relationship type="Realization" first="18" second="25">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
