@@ -86,15 +86,29 @@ namespace RVA_Flight.Client.ViewModels
         public ObservableCollection<City> Cities { get; set; }
         public ObservableCollection<Airplane> Airplanes { get; set; }
 
-        private string _errorMessage;
-        public string ErrorMessage
+        private string _addErrorMessage;
+        public string AddErrorMessage
         {
-            get => _errorMessage;
-            set { _errorMessage = value; OnPropertyChanged(nameof(ErrorMessage)); }
+            get => _addErrorMessage;
+            set { _addErrorMessage = value; OnPropertyChanged(nameof(AddErrorMessage)); }
         }
 
-     
-public List<string> FlightSearchProperties { get; } =
+        private string _updateErrorMessage;
+        public string UpdateErrorMessage
+        {
+            get => _updateErrorMessage;
+            set { _updateErrorMessage = value; OnPropertyChanged(nameof(UpdateErrorMessage)); }
+        }
+
+        private string _deleteErrorMessage;
+        public string DeleteErrorMessage
+        {
+            get => _deleteErrorMessage;
+            set { _deleteErrorMessage = value; OnPropertyChanged(nameof(DeleteErrorMessage)); }
+        }
+
+
+        public List<string> FlightSearchProperties { get; } =
             new List<string>
             {
                 "Flight Number",
@@ -177,14 +191,14 @@ public List<string> FlightSearchProperties { get; } =
                 NewFlight.Arrival == null ||
                 NewFlight.Airplane == null)
             {
-                ErrorMessage = "All fields must be filled.";
+                AddErrorMessage = "All fields must be filled.";
                 log.Warn("Attempted to add flight with missing fields.");
                 return;
             }
 
             try
             {
-                ErrorMessage = "";
+                AddErrorMessage = "";
 
                 if (NewFlight.DelayMinutes == 0)
                     NewFlight.State = new OnTimeState();
@@ -217,12 +231,12 @@ public List<string> FlightSearchProperties { get; } =
             }
             catch (FaultException ex)
             {
-                ErrorMessage = ex.Message;
+                AddErrorMessage = ex.Message;
                 log.Warn($"FaultException adding flight: {ex.Message}");
             }
             catch (Exception ex)
             {
-                ErrorMessage = "Error saving flight: " + ex.Message;
+                AddErrorMessage = "Error saving flight: " + ex.Message;
                 log.Error("Exception adding flight", ex);
             }
         }
@@ -317,7 +331,7 @@ public List<string> FlightSearchProperties { get; } =
                 }
                 catch (Exception ex)
                 {
-                    ErrorMessage = "Error deleting flight: " + ex.Message;
+                    DeleteErrorMessage = "Error deleting flight: " + ex.Message;
                     log.Error("Exception deleting flight", ex);
                 }
             }

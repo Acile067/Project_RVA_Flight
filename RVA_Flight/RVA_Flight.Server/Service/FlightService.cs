@@ -49,6 +49,17 @@ namespace RVA_Flight.Server.Service
 
         public void SaveFlight(Flight flight)
         {
+            if (flight == null)
+            {
+                log.Warn("Attempted to save a null flight.");
+                throw new FaultException("Flight cannot be null.");
+            }
+            if (string.IsNullOrWhiteSpace(flight.FlightNumber) ||
+                !System.Text.RegularExpressions.Regex.IsMatch(flight.FlightNumber, @"^[A-Z]{3}[0-9]{3}$", System.Text.RegularExpressions.RegexOptions.IgnoreCase))
+            {
+                log.Warn($"Invalid FlightNumber format: {flight.FlightNumber}");
+                throw new FaultException("FlightNumber must consist of 3 letters followed by 3 digits (e.g., ABC123).");
+            }
             var storage = _storageService.GetStorage();
             log.Info($"Saving flight: {flight?.FlightNumber}");
 
@@ -61,6 +72,12 @@ namespace RVA_Flight.Server.Service
             {
                 log.Warn("Flight file not found. Creating new list.");
                 flights = new List<Flight>();
+            }
+
+            if (flights.Any(f => f.FlightNumber.Equals(flight.FlightNumber, StringComparison.OrdinalIgnoreCase)))
+            {
+                log.Warn($"FlightNumber '{flight.FlightNumber}' already exists.");
+                throw new FaultException($"FlightNumber '{flight.FlightNumber}' already exists.");
             }
 
             flights.Add(flight);

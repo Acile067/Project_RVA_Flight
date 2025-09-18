@@ -105,7 +105,7 @@
 
 
             </StackPanel>
-            <TextBlock Text="{Binding ErrorMessage}" Foreground="Red" FontWeight="Bold"/>
+            <TextBlock Text="{Binding AddErrorMessage}" Foreground="Red" FontWeight="Bold"/>
 
             <TextBlock Text="Update" FontSize="16" FontWeight="Bold"/>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
@@ -172,8 +172,8 @@
 
 
             </StackPanel>
-            <TextBlock Text="{Binding ErrorMessage}" Foreground="Red" FontWeight="Bold"/>
-            
+            <TextBlock Text="{Binding UpdateErrorMessage}" Foreground="Red" FontWeight="Bold"/>
+
             <StackPanel Orientation="Horizontal">
                 <StackPanel Orientation="Vertical">
                     <TextBlock Text="Delete" FontSize="16" FontWeight="Bold"/>
@@ -187,7 +187,7 @@
                             <Button Content="Delete Flight" Width="100" Height="25" Command="{Binding DeleteFlightCommand}" Margin="5"/>
 
                         </StackPanel>
-                    <TextBlock Text="{Binding ErrorMessage}" Foreground="Red" FontWeight="Bold"/>
+                    <TextBlock Text="{Binding DeleteErrorMessage}" Foreground="Red" FontWeight="Bold"/>
                 </StackPanel>
             
                 <StackPanel Orientation="Vertical" Margin="70,0,0,0">
