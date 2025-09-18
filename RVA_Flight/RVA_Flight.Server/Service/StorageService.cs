@@ -7,6 +7,7 @@ using System.Linq;
 using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
+using log4net;
 
 namespace RVA_Flight.Server.Service
 {
@@ -18,12 +19,18 @@ namespace RVA_Flight.Server.Service
         private string _cityFilePath;
         private string _airplaneFilePath;
 
+        private static readonly ILog log = LogManager.GetLogger(typeof(StorageService));
+
         public string FlightFilePath
         {
             get
             {
                 if (string.IsNullOrEmpty(_flightFilePath))
+                {
+                    log.Warn("FlightFilePath requested but storage type not selected.");
                     throw new InvalidOperationException("Storage type not selected.");
+                }
+                    
                 return _flightFilePath;
             }
         }
@@ -33,7 +40,10 @@ namespace RVA_Flight.Server.Service
             get
             {
                 if (string.IsNullOrEmpty(_cityFilePath))
+                {
+                    log.Warn("CityFilePath requested but storage type not selected.");
                     throw new InvalidOperationException("Storage type not selected.");
+                }
                 return _cityFilePath;
             }
         }
@@ -43,7 +53,10 @@ namespace RVA_Flight.Server.Service
             get
             {
                 if (string.IsNullOrEmpty(_airplaneFilePath))
+                {
+                    log.Warn("AirplaneFilePath requested but storage type not selected.");
                     throw new InvalidOperationException("Storage type not selected.");
+                }
                 return _airplaneFilePath;
             }
         }
@@ -51,7 +64,10 @@ namespace RVA_Flight.Server.Service
         public string SelectStorage(string storageType)
         {
             if (!Enum.TryParse(storageType, true, out StorageType type))
+            {
+                log.Warn($"Invalid storage type requested: {storageType}");
                 return $"Invalid storage type: {storageType}";
+            }
 
             _storage = DataStorageFactory.Create(type);
 
@@ -74,13 +90,19 @@ namespace RVA_Flight.Server.Service
                     break;
             }
 
+            log.Info($"Storage selected: {type} (Flight: {_flightFilePath}, City: {_cityFilePath}, Airplane: {_airplaneFilePath})");
             return $"Selected storage: {type}";
         }
 
         public IDataStorage GetStorage()
         {
             if (_storage == null)
+            {
+                log.Error("GetStorage called but storage type not selected.");
                 throw new InvalidOperationException("Storage type not selected.");
+            }
+
+            log.Info("Returning selected storage instance.");
             return _storage;
         }
 

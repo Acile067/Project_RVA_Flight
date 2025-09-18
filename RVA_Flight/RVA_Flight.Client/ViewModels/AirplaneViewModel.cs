@@ -8,11 +8,13 @@ using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using log4net;
 
 namespace RVA_Flight.Client.ViewModels
 {
     public class AirplaneViewModel : BaseViewModel
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(AirplaneViewModel));
         public ObservableCollection<Airplane> Airplanes { get; set; }
         public Airplane NewAirplane { get; set; }
 
@@ -31,12 +33,24 @@ namespace RVA_Flight.Client.ViewModels
 
         public AirplaneViewModel()
         {
-            Airplanes = new ObservableCollection<Airplane>(
-                ClientProxy.Instance.AirplaneService.LoadAirplanes() ?? new List<Airplane>()
-            );
+            try
+            {
+                log.Info("Initializing AirplaneViewModel...");
 
-            NewAirplane = new Airplane();
-            AddAirplaneCommand = new RelayCommand(AddAirplane);
+                Airplanes = new ObservableCollection<Airplane>(
+                    ClientProxy.Instance.AirplaneService.LoadAirplanes() ?? new List<Airplane>()
+                );
+                log.Info($"Loaded {Airplanes.Count} airplanes from service.");
+
+                NewAirplane = new Airplane();
+                AddAirplaneCommand = new RelayCommand(AddAirplane);
+
+                log.Info("AirplaneViewModel initialized successfully.");
+            }
+            catch (Exception ex)
+            {
+                log.Error("Error initializing AirplaneViewModel", ex);
+            }
         }
 
         private void AddAirplane(object obj)
@@ -47,6 +61,7 @@ namespace RVA_Flight.Client.ViewModels
                 NewAirplane.YearOfManufacture <= 0)
             {
                 ErrorMessage = "All fields must be provided and valid.";
+                log.Warn("Attempted to add airplane with missing or invalid fields.");
                 return;
             }
 
@@ -54,6 +69,7 @@ namespace RVA_Flight.Client.ViewModels
             {
                 ErrorMessage = "";
 
+                log.Info($"Adding airplane {NewAirplane.Code} - {NewAirplane.Name}...");
                 ClientProxy.Instance.AirplaneService.SaveAirplane(NewAirplane);
                 Airplanes.Add(new Airplane
                 {
@@ -62,6 +78,7 @@ namespace RVA_Flight.Client.ViewModels
                     Capacity = NewAirplane.Capacity,
                     YearOfManufacture = NewAirplane.YearOfManufacture
                 });
+                log.Info($"Airplane {NewAirplane.Code} added successfully.");
 
                 NewAirplane = new Airplane();
                 OnPropertyChanged(nameof(NewAirplane));
@@ -69,10 +86,12 @@ namespace RVA_Flight.Client.ViewModels
             catch (FaultException ex)
             {
                 ErrorMessage = ex.Message;
+                log.Warn($"FaultException adding airplane: {ex.Message}");
             }
             catch (Exception ex)
             {
                 ErrorMessage = "Error saving airplane: " + ex.Message;
+                log.Error("Exception adding airplane", ex);
             }
         }
     }

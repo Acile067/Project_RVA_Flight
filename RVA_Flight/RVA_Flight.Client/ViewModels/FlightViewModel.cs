@@ -12,11 +12,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using log4net;
 
 namespace RVA_Flight.Client.ViewModels
 {
     public class FlightViewModel : BaseViewModel
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(FlightViewModel));
         public Commands.CommandManager CommandManager { get; }
 
         public ObservableCollection<Flight> Flights { get; set; }
@@ -54,6 +56,7 @@ namespace RVA_Flight.Client.ViewModels
                 _selectedFlight = value;
                 OnPropertyChanged(nameof(SelectedFlight));
                 PrepareUpdatedFlight();
+                log.Info($"Selected flight for update: {SelectedFlight?.FlightNumber}");
             }
         }
 
@@ -113,11 +116,15 @@ public List<string> FlightSearchProperties { get; } =
 
         public FlightViewModel()
         {
-            CommandManager= new Commands.CommandManager();
+            log.Info("Initializing FlightViewModel...");
+
+            CommandManager = new Commands.CommandManager();
 
             Flights = new ObservableCollection<Flight>(
                 ClientProxy.Instance.FlightService.LoadFlights() ?? new List<Flight>()
             );
+            log.Info($"Loaded {Flights.Count} flights from service.");
+
             FilteredFlights = new ObservableCollection<Flight>(Flights);
 
             CharterFlights = new ObservableCollection<CharterFlight>
@@ -160,6 +167,7 @@ public List<string> FlightSearchProperties { get; } =
             RedoOperationCommand = new RelayCommand(RedoOperation, CanRedoOperation);
             ShowChartersCommand = new RelayCommand(ShowCharterFlights);
 
+            log.Info("FlightViewModel initialized successfully.");
         }
 
         private void AddFlight(object obj)
@@ -170,6 +178,7 @@ public List<string> FlightSearchProperties { get; } =
                 NewFlight.Airplane == null)
             {
                 ErrorMessage = "All fields must be filled.";
+                log.Warn("Attempted to add flight with missing fields.");
                 return;
             }
 
@@ -182,8 +191,10 @@ public List<string> FlightSearchProperties { get; } =
                 else
                     NewFlight.State = new DelayedState();
 
+                log.Info($"Adding flight {NewFlight.FlightNumber}...");
                 AddFlightCommand add = new AddFlightCommand(Flights, NewFlight);
                 CommandManager.ExecuteCommand(add);
+                log.Info($"Flight {NewFlight.FlightNumber} added successfully.");
 
                 //ponistavanje filtera
 
@@ -207,10 +218,12 @@ public List<string> FlightSearchProperties { get; } =
             catch (FaultException ex)
             {
                 ErrorMessage = ex.Message;
+                log.Warn($"FaultException adding flight: {ex.Message}");
             }
             catch (Exception ex)
             {
                 ErrorMessage = "Error saving flight: " + ex.Message;
+                log.Error("Exception adding flight", ex);
             }
         }
 
@@ -244,6 +257,7 @@ public List<string> FlightSearchProperties { get; } =
             if (SelectedFlight == null || UpdatedFlight == null)
                 return; // ništa nije izabrano
 
+            log.Info($"Updating flight {UpdatedFlight.FlightNumber}...");
             // 1. ažuriraj originalni let sa vrednostima iz UpdatedFlight
             UpdateFlightCommand update = new UpdateFlightCommand(Flights, UpdatedFlight);
             CommandManager.ExecuteCommand(update);
@@ -251,6 +265,7 @@ public List<string> FlightSearchProperties { get; } =
             // 2. osveži prikaz DataGrid-a (ako koristiš FilteredFlights)
             FilteredFlights = new ObservableCollection<Flight>(Flights);
             OnPropertyChanged(nameof(FilteredFlights));
+            log.Info($"Flight {UpdatedFlight.FlightNumber} updated successfully.");
         }
 
         private void ShowCharterFlights(object obj)
@@ -258,6 +273,7 @@ public List<string> FlightSearchProperties { get; } =
             DisplayWithCharters = new ObservableCollection<Flight>(Flights);
             foreach (var c in CharterFlights)
                 DisplayWithCharters.Add(new CharterFlightAdapter(c));
+            log.Info("Showing charter flights...");
             FilteredFlights = new ObservableCollection<Flight>(DisplayWithCharters);
             OnPropertyChanged(nameof(FilteredFlights));
 
@@ -267,7 +283,7 @@ public List<string> FlightSearchProperties { get; } =
         }
         private void ShowAll(object obj)
         {
-            
+            log.Info("Showing all flights...");
             FilteredFlights = new ObservableCollection<Flight>(Flights);
             OnPropertyChanged(nameof(FilteredFlights));
 
@@ -286,9 +302,10 @@ public List<string> FlightSearchProperties { get; } =
             {
                 try
                 {
-                   
+                    log.Info($"Deleting flight {SelectedFlightForDelete.FlightNumber}...");
                     DeleteFlightCommand delete = new DeleteFlightCommand(Flights, SelectedFlightForDelete);
                     CommandManager.ExecuteCommand(delete);
+                    log.Info($"Flight {SelectedFlightForDelete.FlightNumber} deleted successfully.");
 
                     //ponistavanje filtera
 
@@ -300,7 +317,8 @@ public List<string> FlightSearchProperties { get; } =
                 }
                 catch (Exception ex)
                 {
-                    //"Error deleting flight, LOGOVANJE
+                    ErrorMessage = "Error deleting flight: " + ex.Message;
+                    log.Error("Exception deleting flight", ex);
                 }
             }
         }
@@ -312,11 +330,12 @@ public List<string> FlightSearchProperties { get; } =
 
         private void UndoOperation(object obj)
         {
+            log.Info("Undoing last operation...");
             CommandManager.Undo();
 
             FilteredFlights = new ObservableCollection<Flight>(Flights);
             OnPropertyChanged(nameof(FilteredFlights));
-
+            log.Info("Undo operation completed.");
         }
 
         private bool CanRedoOperation(object obj)
@@ -326,13 +345,16 @@ public List<string> FlightSearchProperties { get; } =
 
         private void RedoOperation(object obj)
         {
+            log.Info("Redoing last operation...");
             CommandManager.Redo();
 
             FilteredFlights = new ObservableCollection<Flight>(Flights);
             OnPropertyChanged(nameof(FilteredFlights));
+            log.Info("Redo operation completed.");
         }
         private void SearchFlights(object obj)
         {
+            log.Info($"Searching flights by {SelectedSearchProperty} with value '{SearchText}'");
             if (string.IsNullOrWhiteSpace(SearchText) || string.IsNullOrWhiteSpace(SelectedSearchProperty))
             {
                 // ako nema unosa ili nije izabrano polje, prikaži sve letove
@@ -367,6 +389,7 @@ public List<string> FlightSearchProperties { get; } =
 
             FilteredFlights = new ObservableCollection<Flight>(filtered);
             OnPropertyChanged(nameof(FilteredFlights));
+            log.Info($"Search completed. {FilteredFlights.Count} flights found.");
         }
     }
 }

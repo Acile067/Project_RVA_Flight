@@ -7,13 +7,16 @@ using System.ServiceModel;
 using System.ServiceModel.Description;
 using System.Text;
 using System.Threading.Tasks;
+using log4net;
 
 namespace RVA_Flight.Server
 {
     public class Program
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(Program));
         static void Main(string[] args)
         {
+            log.Info("=== App started ===");
             Uri flightBaseAddress = new Uri("http://localhost:5000/FlightService");
             Uri storageBaseAddress = new Uri("http://localhost:5001/StorageService");
             Uri cityBaseAddress = new Uri("http://localhost:5002/CityService");
@@ -62,18 +65,24 @@ namespace RVA_Flight.Server
                     Console.WriteLine("CityService: " + cityBaseAddress);
                     Console.WriteLine("AirplaneService: " + airplaneBaseAddress);
                     Console.WriteLine("Press Enter to exit...");
+
                     Console.ReadLine();
 
                     flightHost.Close();
                     storageHost.Close();
                     cityHost.Close();
                     airplaneHost.Close();
+
+                    log.Info("=== App stopped ===");
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine("Error: " + ex.Message);
                     flightHost.Abort();
                     storageHost.Abort();
+                    cityHost.Abort();
+                    airplaneHost.Abort();
+                    log.Error("Exception occurred: ", ex);
                 }
             }
         }

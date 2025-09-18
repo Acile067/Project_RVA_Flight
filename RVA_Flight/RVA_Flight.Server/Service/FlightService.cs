@@ -9,6 +9,7 @@ using System.Linq;
 using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
+using log4net;
 
 namespace RVA_Flight.Server.Service
 {
@@ -16,25 +17,32 @@ namespace RVA_Flight.Server.Service
     public class FlightService : IFlightService
     {
         private readonly IStorageService _storageService;
+        private static readonly ILog log = LogManager.GetLogger(typeof(FlightService));
 
         public FlightService(IStorageService storageService)
         {
             _storageService = storageService;
+            log.Info("FlightService initialized.");
         }
 
         public List<Flight> LoadFlights()
         {
             try
             {
+                log.Info("Loading flights...");
                 var storage = _storageService.GetStorage();
-                return storage.Load<List<Flight>>(_storageService.GetFlightFilePath()) ?? new List<Flight>();
+                var result = storage.Load<List<Flight>>(_storageService.GetFlightFilePath()) ?? new List<Flight>();
+                log.Info($"Loaded {result.Count} flights.");
+                return result;
             }
             catch (FileNotFoundException)
             {
+                log.Warn("Flight file not found. Returning empty list.");
                 return new List<Flight>();
             }
             catch (Exception ex)
             {
+                log.Error("Error loading flights: " + ex.Message, ex);
                 return new List<Flight>();
             }
         }
@@ -42,6 +50,7 @@ namespace RVA_Flight.Server.Service
         public void SaveFlight(Flight flight)
         {
             var storage = _storageService.GetStorage();
+            log.Info($"Saving flight: {flight?.FlightNumber}");
 
             List<Flight> flights;
             try
@@ -50,16 +59,19 @@ namespace RVA_Flight.Server.Service
             }
             catch (FileNotFoundException)
             {
+                log.Warn("Flight file not found. Creating new list.");
                 flights = new List<Flight>();
             }
 
             flights.Add(flight);
 
             storage.Save(_storageService.GetFlightFilePath(), flights);
+            log.Info($"Flight '{flight.FlightNumber}' saved successfully.");
         }
 
         public void DeleteFlight(Flight flight)
         {
+            log.Info($"Deleting flight: {flight?.FlightNumber}");
             var storage = _storageService.GetStorage();
 
             List<Flight> flights;
@@ -69,6 +81,7 @@ namespace RVA_Flight.Server.Service
             }
             catch (FileNotFoundException)
             {
+                log.Warn("Flight file not found. Nothing to delete.");
                 flights = new List<Flight>();
             }
 
@@ -77,8 +90,13 @@ namespace RVA_Flight.Server.Service
             if (flightToRemove != null)
             {
                 flights.Remove(flightToRemove);
+                log.Info($"Flight '{flight.FlightNumber}' deleted successfully.");
             }
-            
+            else
+            {
+                log.Warn($"Flight '{flight.FlightNumber}' not found. Nothing deleted.");
+            }
+
 
             storage.Save(_storageService.GetFlightFilePath(), flights);
         }

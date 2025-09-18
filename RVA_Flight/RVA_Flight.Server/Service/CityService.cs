@@ -7,6 +7,7 @@ using System.Linq;
 using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
+using log4net;
 
 namespace RVA_Flight.Server.Service
 {
@@ -14,25 +15,32 @@ namespace RVA_Flight.Server.Service
     public class CityService : ICityService
     {
         private readonly IStorageService _storageService;
+        private static readonly ILog log = LogManager.GetLogger(typeof(CityService));
 
         public CityService(IStorageService storageService)
         {
             _storageService = storageService;
+            log.Info("CityService initialized.");
         }
 
         public List<City> LoadCities()
         {
             try
             {
+                log.Info("Loading cities...");
                 var storage = _storageService.GetStorage();
-                return storage.Load<List<City>>(_storageService.GetCityFilePath()) ?? new List<City>();
+                var result = storage.Load<List<City>>(_storageService.GetCityFilePath()) ?? new List<City>();
+                log.Info($"Loaded {result.Count} cities.");
+                return result;
             }
             catch (FileNotFoundException)
             {
+                log.Warn("City file not found. Returning empty list.");
                 return new List<City>();
             }
             catch (Exception ex)
             {
+                log.Error("Unexpected error while loading cities.", ex);
                 return new List<City>();
             }
         }
@@ -41,9 +49,11 @@ namespace RVA_Flight.Server.Service
         {
             if (string.IsNullOrWhiteSpace(city?.Name) || string.IsNullOrWhiteSpace(city?.Country))
             {
+                log.Warn("Attempt to save invalid city (missing Name or Country).");
                 throw new FaultException("City must have both Name and Country.");
             }
 
+            log.Info($"Saving city: {city.Name}, {city.Country}");
             var storage = _storageService.GetStorage();
 
             List<City> cities;
@@ -53,17 +63,20 @@ namespace RVA_Flight.Server.Service
             }
             catch (FileNotFoundException)
             {
+                log.Warn("City file not found. Starting with a new list.");
                 cities = new List<City>();
             }
 
             if (cities.Any(c => c.Name.Equals(city.Name, StringComparison.OrdinalIgnoreCase)))
             {
+                log.Warn($"City '{city.Name}' already exists. Save aborted.");
                 throw new FaultException($"City '{city.Name}' already exists.");
             }
 
             cities.Add(city);
 
             storage.Save(_storageService.GetCityFilePath(), cities);
+            log.Info($"City '{city.Name}' saved successfully. Total cities: {cities.Count}");
         }
     }
 }
