@@ -255,6 +255,9 @@ public List<string> FlightSearchProperties { get; } =
 
         private void ShowCharterFlights(object obj)
         {
+            DisplayWithCharters = new ObservableCollection<Flight>(Flights);
+            foreach (var c in CharterFlights)
+                DisplayWithCharters.Add(new CharterFlightAdapter(c));
             FilteredFlights = new ObservableCollection<Flight>(DisplayWithCharters);
             OnPropertyChanged(nameof(FilteredFlights));
 

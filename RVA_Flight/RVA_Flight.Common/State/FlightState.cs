@@ -10,11 +10,14 @@ namespace RVA_Flight.Common.State
     public abstract class FlightState
     {
         protected Flight flight;
-        public abstract string Name { get; }
-        public void setFlight(Flight flight)
+
+        public void SetFlight(Flight flight)
         {
             this.flight = flight;
         }
-        public abstract void Handle();
+
+        public abstract string Name { get; }
+        public abstract string GetPilotMessage();   // Poruka pilota
+        public abstract int GetDelayMinutes();
     }
 }

@@ -67,6 +67,7 @@
     <Compile Include="ViewModels\AirplaneViewModel.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="ViewModels\CityViewModel.cs" />
+    <Compile Include="ViewModels\FlightStateSimulationViewModel.cs" />
     <Compile Include="ViewModels\FlightViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="ViewModels\RelayCommand.cs" />
@@ -76,6 +77,9 @@
     </Compile>
     <Compile Include="Views\CityView.xaml.cs">
       <DependentUpon>CityView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\FlightStateSimulationView.xaml.cs">
+      <DependentUpon>FlightStateSimulationView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\FlightView.xaml.cs">
       <DependentUpon>FlightView.xaml</DependentUpon>
@@ -100,6 +104,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\CityView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\FlightStateSimulationView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

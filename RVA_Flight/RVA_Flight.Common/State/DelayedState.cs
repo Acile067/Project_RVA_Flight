@@ -9,9 +9,8 @@ namespace RVA_Flight.Common.State
     public class DelayedState : FlightState
     {
         public override string Name => "Delayed";
-        public override void Handle()
-        {
-            Console.WriteLine($"Flight {flight.FlightNumber} is delayed.");
-        }
+
+        public override string GetPilotMessage() => $"Flight delayed by {flight.DelayMinutes} minutes.";
+        public override int GetDelayMinutes() => flight.DelayMinutes;
     }
 }

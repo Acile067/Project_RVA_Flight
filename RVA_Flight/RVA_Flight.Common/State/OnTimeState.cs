@@ -9,9 +9,8 @@ namespace RVA_Flight.Common.State
     public class OnTimeState : FlightState
     {
         public override string Name => "On Time";
-        public override void Handle()
-        {
-            Console.WriteLine($"Flight {flight.FlightNumber} is on time.");
-        }
+
+        public override string GetPilotMessage() => "Flight is on time.";
+        public override int GetDelayMinutes() => 0;
     }
 }
