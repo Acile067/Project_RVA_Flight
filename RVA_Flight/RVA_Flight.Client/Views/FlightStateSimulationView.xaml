@@ -8,8 +8,12 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
         <StackPanel Orientation="Vertical">
-            <DataGrid ItemsSource="{Binding SimulatedFlights}" AutoGenerateColumns="False" Height="200">
-            <DataGrid.Columns>
+            <DataGrid ItemsSource="{Binding SimulatedFlights}" AutoGenerateColumns="False" Height="200" CanUserDeleteRows="False" 
+                CanUserResizeRows="False" 
+                CanUserReorderColumns="False" 
+                CanUserResizeColumns="False" 
+                IsReadOnly="True">      
+                <DataGrid.Columns>
                 <DataGridTextColumn Header="Flight Number" Binding="{Binding FlightNumber}" />
                 <DataGridTextColumn Header="State" Binding="{Binding StateName}" />
                 <DataGridTextColumn Header="Delay Minutes" Binding="{Binding DelayMinutes}" />

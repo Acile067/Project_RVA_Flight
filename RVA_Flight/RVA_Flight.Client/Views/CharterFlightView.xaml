@@ -1,0 +1,70 @@
+﻿<UserControl x:Class="RVA_Flight.Client.Views.CharterFlightView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:RVA_Flight.Client.Views"
+             xmlns:localEnums="clr-namespace:RVA_Flight.Client.Helpers"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid Margin="10">
+        <StackPanel>
+            <TextBlock Text="Charter Flights" FontSize="24" FontWeight="Bold" Margin="0,0,0,10"/>
+
+            <DataGrid ItemsSource="{Binding CharterFlights}" AutoGenerateColumns="False" Height="200" Margin="0,0,0,10" CanUserAddRows="False" 
+                CanUserDeleteRows="False" 
+                CanUserResizeRows="False" 
+                CanUserReorderColumns="False" 
+                CanUserResizeColumns="False" 
+                IsReadOnly="True">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Flight Number" Binding="{Binding FlightNumber}" Width="*"/>
+                    <DataGridTextColumn Header="Type" Binding="{Binding Type}" Width="*"/>
+                    <DataGridTextColumn Header="Arrival Time" Binding="{Binding ArrivalTime}" Width="*"/>
+                    <DataGridTextColumn Header="Duration" Binding="{Binding Duration}" Width="*"/>
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <TextBlock Text="Add New Charter Flight" FontSize="16" FontWeight="Bold" Margin="0,5,0,5"/>
+
+            <StackPanel Orientation="Horizontal">
+                <StackPanel Orientation="Vertical" Margin="5">
+                    <TextBlock Text="Flight Number"/>
+                    <TextBox Width="150" Text="{Binding NewCharterFlight.FlightNumber, UpdateSourceTrigger=PropertyChanged}"/>
+                </StackPanel>
+
+                
+
+                <StackPanel Orientation="Vertical" Margin="5">
+                    <TextBlock Text="Duration (hours)"/>
+                    <TextBox Width="100" Text="{Binding NewCharterFlightDurationHours, UpdateSourceTrigger=PropertyChanged}"/>
+                </StackPanel>
+
+                
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <StackPanel Orientation="Vertical" Margin="5">
+                    <TextBlock Text="Type"/>
+                    <ComboBox Width="150" 
+                      ItemsSource="{x:Static localEnums:FlightTypeValues.All}" 
+                      SelectedItem="{Binding NewCharterFlight.Type, Mode=TwoWay}" />
+                                </StackPanel>
+
+                <StackPanel Orientation="Vertical" Margin="5">
+                    <TextBlock Text="Arrival Time"/>
+                    <DatePicker SelectedDate="{Binding NewCharterFlight.ArrivalTime}"/>
+                </StackPanel>
+            </StackPanel>
+
+
+            <StackPanel Orientation="Horizontal" Margin="5">
+                <Button Content="Add Charter Flight" Width="150" Height="30" 
+                Command="{Binding AddCharterFlightCommand}" 
+                HorizontalAlignment="Left"/>
+            </StackPanel>
+
+
+            <TextBlock Text="{Binding ErrorMessage}" Foreground="Red" FontWeight="Bold" Margin="0,5,0,0"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

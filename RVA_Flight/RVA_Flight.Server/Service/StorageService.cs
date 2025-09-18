@@ -18,6 +18,7 @@ namespace RVA_Flight.Server.Service
         private string _flightFilePath;
         private string _cityFilePath;
         private string _airplaneFilePath;
+        private string _charterFlightFilePath;
 
         private static readonly ILog log = LogManager.GetLogger(typeof(StorageService));
 
@@ -61,6 +62,19 @@ namespace RVA_Flight.Server.Service
             }
         }
 
+        public string CharterFlightFilePath
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_charterFlightFilePath))
+                {
+                    log.Warn("CharterFlightFilePath requested but storage type not selected.");
+                    throw new InvalidOperationException("Storage type not selected.");
+                }
+                return _charterFlightFilePath;
+            }
+        }
+
         public string SelectStorage(string storageType)
         {
             if (!Enum.TryParse(storageType, true, out StorageType type))
@@ -77,16 +91,19 @@ namespace RVA_Flight.Server.Service
                     _flightFilePath = "flight.csv";
                     _cityFilePath = "city.csv";
                     _airplaneFilePath = "airplane.csv";
+                    _charterFlightFilePath = "charterFlight.csv";
                     break;
                 case StorageType.Json:
                     _flightFilePath = "flight.json";
                     _cityFilePath = "city.json";
                     _airplaneFilePath = "airplane.json";
+                    _charterFlightFilePath = "charterFlight.json";
                     break;
                 case StorageType.Xml:
                     _flightFilePath = "flight.xml";
                     _cityFilePath = "city.xml";
                     _airplaneFilePath = "airplane.xml";
+                    _charterFlightFilePath = "charterFlight.xml";
                     break;
             }
 
@@ -109,5 +126,6 @@ namespace RVA_Flight.Server.Service
         public string GetFlightFilePath() => FlightFilePath;
         public string GetCityFilePath() => CityFilePath;
         public string GetAirplaneFilePath() => AirplaneFilePath;
+        public string GetCharterFlightFilePath() => CharterFlightFilePath;
     }
 }

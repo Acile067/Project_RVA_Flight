@@ -37,8 +37,16 @@
                     <DataGridTextColumn Header="Departure" Binding="{Binding Departure.Name}" Width="*"/>
                     <DataGridTextColumn Header="Arrival" Binding="{Binding Arrival.Name}" Width="*"/>
                     <DataGridTextColumn Header="Airplane" Binding="{Binding Airplane.Name}" Width="*"/>
-                    <DataGridTextColumn Header="Departure Time" Binding="{Binding DepartureTime}" Width="*"/>
-                    <DataGridTextColumn Header="Arrival Time" Binding="{Binding ArrivalTime}" Width="*"/>
+                    <DataGridTextColumn Header="Departure Time">
+                        <DataGridTextColumn.Binding>
+                            <Binding Path="DepartureTime" StringFormat="dd/MM/yyyy HH:mm" TargetNullValue=""/>
+                        </DataGridTextColumn.Binding>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Arrival Time">
+                        <DataGridTextColumn.Binding>
+                            <Binding Path="ArrivalTime" StringFormat="dd/MM/yyyy HH:mm" TargetNullValue=""/>
+                        </DataGridTextColumn.Binding>
+                    </DataGridTextColumn>
                     <DataGridTextColumn Header="State" Binding="{Binding State.Name}" Width="*"/>
                     <DataGridTextColumn Header="Type" Binding="{Binding Type}" Width="*"/>
                 </DataGrid.Columns>

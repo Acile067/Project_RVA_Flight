@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Contracts\IAirplaneService.cs" />
+    <Compile Include="Contracts\ICharterFlight.cs" />
     <Compile Include="Contracts\ICityService.cs" />
     <Compile Include="Contracts\IDataStorage.cs" />
     <Compile Include="Contracts\IFlightService.cs" />

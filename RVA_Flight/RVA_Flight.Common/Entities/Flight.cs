@@ -23,7 +23,7 @@ namespace RVA_Flight.Common.Entities
         public virtual DateTime ArrivalTime { get; set; }
 
         [DataMember]
-        public  virtual DateTime DepartureTime { get; set; }
+        public  virtual DateTime? DepartureTime { get; set; }
 
         [DataMember]
         public virtual string PilotMessage { get; set; }

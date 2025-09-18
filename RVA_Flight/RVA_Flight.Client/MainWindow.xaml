@@ -30,8 +30,13 @@
         <DataTemplate DataType="{x:Type viewmodels:AirplaneViewModel}">
             <views:AirplaneView />
         </DataTemplate>
+        
         <DataTemplate DataType="{x:Type viewmodels:FlightStateSimulationViewModel}">
             <views:FlightStateSimulationView />
+        </DataTemplate>
+        
+        <DataTemplate DataType="{x:Type viewmodels:CharterFlightViewModel}">
+            <views:CharterFlightView />
         </DataTemplate>
     </Window.Resources>
 
@@ -51,7 +56,10 @@
             <Button Content="Flight State Simulation"
                 Command="{Binding NavigateCommand}"
                 CommandParameter="Simulation" Margin="5"/>
-            
+            <Button Content="Charter Flights"
+                Command="{Binding NavigateCommand}"
+                CommandParameter="CharterFlight" Margin="5"/>
+
         </StackPanel>
 
         <!-- Glavni prikaz -->

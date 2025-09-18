@@ -86,6 +86,7 @@ namespace RVA_Flight.Server.DataStorage
             if (type == typeof(City)) return new CityMap();
             if (type == typeof(Airplane)) return new AirplaneMap();
             if (type == typeof(Flight)) return new FlightMap();
+            if (type == typeof(CharterFlight)) return new CharterFlightMap();
             throw new InvalidOperationException($"No CSV map defined for {type.Name}");
         }
     }

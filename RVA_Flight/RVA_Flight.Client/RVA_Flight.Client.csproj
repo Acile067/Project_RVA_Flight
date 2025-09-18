@@ -71,6 +71,7 @@
     <Compile Include="Services\ClientProxy.cs" />
     <Compile Include="ViewModels\AirplaneViewModel.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
+    <Compile Include="ViewModels\CharterFlightViewModel.cs" />
     <Compile Include="ViewModels\CityViewModel.cs" />
     <Compile Include="ViewModels\FlightStateSimulationViewModel.cs" />
     <Compile Include="ViewModels\FlightViewModel.cs" />
@@ -79,6 +80,9 @@
     <Compile Include="ViewModels\StorageSelectionViewModel.cs" />
     <Compile Include="Views\AirplaneView.xaml.cs">
       <DependentUpon>AirplaneView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\CharterFlightView.xaml.cs">
+      <DependentUpon>CharterFlightView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\CityView.xaml.cs">
       <DependentUpon>CityView.xaml</DependentUpon>
@@ -105,6 +109,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Views\AirplaneView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\CharterFlightView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -141,11 +141,10 @@ namespace RVA_Flight.Client.ViewModels
 
             FilteredFlights = new ObservableCollection<Flight>(Flights);
 
-            CharterFlights = new ObservableCollection<CharterFlight>
-            {
-                new CharterFlight{ FlightNumber="CH100", Type=FlightType.PRIVATE, ArrivalTime=DateTime.Now.AddHours(2), Duration=TimeSpan.FromHours(2)},
-                new CharterFlight{ FlightNumber="CH101", Type=FlightType.PRIVATE, ArrivalTime=DateTime.Now.AddHours(1), Duration=TimeSpan.FromHours(3)},
-            };
+            CharterFlights = new ObservableCollection<CharterFlight>(
+                ClientProxy.Instance.CharterFlightService.LoadCharterFlights()
+                ?? new List<CharterFlight>()
+            );
 
             DisplayWithCharters = new ObservableCollection<Flight>(Flights);
             foreach (var c in CharterFlights)

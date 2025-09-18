@@ -46,6 +46,9 @@ namespace RVA_Flight.Client.ViewModels
                 case "Simulation":
                     CurrentViewModel = new FlightStateSimulationViewModel();
                     break;
+                case "CharterFlight":
+                    CurrentViewModel = new CharterFlightViewModel();
+                    break;
             }
         }
     }

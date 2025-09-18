@@ -83,11 +83,13 @@
     <Compile Include="DataStorage\JsonDataStorage.cs" />
     <Compile Include="DataStorage\XmlDataStorage.cs" />
     <Compile Include="Mappings\AirplaneMap.cs" />
+    <Compile Include="Mappings\CharterFlightMap.cs" />
     <Compile Include="Mappings\CityMap.cs" />
     <Compile Include="Mappings\FlightMap.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service\AirplaneService.cs" />
+    <Compile Include="Service\CharterFlightService.cs" />
     <Compile Include="Service\CityService.cs" />
     <Compile Include="Service\FlightService.cs" />
     <Compile Include="Service\StorageService.cs" />

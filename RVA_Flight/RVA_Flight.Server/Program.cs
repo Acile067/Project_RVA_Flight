@@ -21,16 +21,19 @@ namespace RVA_Flight.Server
             Uri storageBaseAddress = new Uri("http://localhost:5001/StorageService");
             Uri cityBaseAddress = new Uri("http://localhost:5002/CityService");
             Uri airplaneBaseAddress = new Uri("http://localhost:5003/AirplaneService");
+            Uri charterFlightBaseAddress = new Uri("http://localhost:5004/CharterFlightService");
 
             var storageService = new StorageService();
             var flightService = new FlightService(storageService);
             var cityService = new CityService(storageService);
             var airplaneService = new AirplaneService(storageService);
+            var charterFlightService = new CharterFlightService(storageService);
 
             using (ServiceHost flightHost = new ServiceHost(flightService, flightBaseAddress))
             using (ServiceHost storageHost = new ServiceHost(storageService, storageBaseAddress))
             using (ServiceHost cityHost = new ServiceHost(cityService, cityBaseAddress))
             using (ServiceHost airplaneHost = new ServiceHost(airplaneService, airplaneBaseAddress))
+            using (ServiceHost charterFlightHost = new ServiceHost(charterFlightService, charterFlightBaseAddress))
             {
                 // Endpoint-i za FlightService
                 flightHost.AddServiceEndpoint(typeof(IFlightService), new BasicHttpBinding(), "");
@@ -52,18 +55,25 @@ namespace RVA_Flight.Server
                 airplaneHost.Description.Behaviors.Add(new ServiceMetadataBehavior { HttpGetEnabled = true, HttpGetUrl = airplaneBaseAddress });
                 airplaneHost.AddServiceEndpoint(ServiceMetadataBehavior.MexContractName, MetadataExchangeBindings.CreateMexHttpBinding(), "mex");
 
+                // Endpoint-i za CharterFlightService
+                charterFlightHost.AddServiceEndpoint(typeof(ICharterFlight), new BasicHttpBinding(), "");
+                charterFlightHost.Description.Behaviors.Add(new ServiceMetadataBehavior { HttpGetEnabled = true, HttpGetUrl = charterFlightBaseAddress });
+                charterFlightHost.AddServiceEndpoint(ServiceMetadataBehavior.MexContractName, MetadataExchangeBindings.CreateMexHttpBinding(), "mex");
+
                 try
                 {
                     flightHost.Open();
                     storageHost.Open();
                     cityHost.Open();
                     airplaneHost.Open();
+                    charterFlightHost.Open();
 
                     Console.WriteLine("WCF services are running:");
                     Console.WriteLine("FlightService: " + flightBaseAddress);
                     Console.WriteLine("StorageService: " + storageBaseAddress);
                     Console.WriteLine("CityService: " + cityBaseAddress);
                     Console.WriteLine("AirplaneService: " + airplaneBaseAddress);
+                    Console.WriteLine("CharterFlightService: " + charterFlightBaseAddress);
                     Console.WriteLine("Press Enter to exit...");
 
                     Console.ReadLine();
@@ -72,6 +82,7 @@ namespace RVA_Flight.Server
                     storageHost.Close();
                     cityHost.Close();
                     airplaneHost.Close();
+                    charterFlightHost.Close();
 
                     log.Info("=== App stopped ===");
                 }
@@ -82,6 +93,7 @@ namespace RVA_Flight.Server
                     storageHost.Abort();
                     cityHost.Abort();
                     airplaneHost.Abort();
+                    charterFlightHost.Abort();
                     log.Error("Exception occurred: ", ex);
                 }
             }
