@@ -58,7 +58,7 @@
 
 
             <StackPanel Orientation="Horizontal" Margin="5">
-                <Button Content="Add Charter Flight" Width="150" Height="30" 
+                <Button Content="Add Charter Flight" Width="100" Height="25" 
                 Command="{Binding AddCharterFlightCommand}" 
                 HorizontalAlignment="Left"/>
             </StackPanel>
